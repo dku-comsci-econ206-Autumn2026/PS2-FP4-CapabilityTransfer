@@ -6,7 +6,7 @@ Firms choose **imitate or innovate**, then **openness or secrecy**. A prize rate
 rewards disclosure, paid per unit of training budget `E`. This repository derives the
 range of `k` that keeps the market healthy.
 
-**Live page:** <https://huggingface.co/spaces/Peterhe123/FP4_PS2>
+**Live page:** <https://huggingface.co/spaces/dku-comsci-econ206-2026/FP4_PS2>
 
 ## Contents
 
