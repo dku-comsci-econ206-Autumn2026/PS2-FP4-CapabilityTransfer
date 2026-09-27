@@ -3,7 +3,7 @@
 **Team:** COMSCI/ECON 206, Autumn 2026, Team FP4 — **Zhengjun He** and **Yichen Shen**
 **Course instructor:** Professor Luyao Zhang (course metadata, not an author)
 **Release:** [`ps2-review-v1`](../../releases/tag/ps2-review-v1)
-**Exact commit:** `660be4d85ee531cc751bb2c8a44e9a0c1ed652a2`
+**Exact commit:** `68901fbcf4bee6fc35eded4b7a8d440e6359cdff`
 
 This repository is the smallest reproducible demonstration used in the PS2 paper and the A0 poster. It compares three access regimes for a foundation model: closed API, licensed distillation, and open weights.
 
