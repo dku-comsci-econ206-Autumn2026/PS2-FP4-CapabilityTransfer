@@ -3,7 +3,7 @@
 **Team:** COMSCI/ECON 206, Autumn 2026, Team FP4 — **Zhengjun He** and **Yichen Shen**
 **Course instructor:** Professor Luyao Zhang (course metadata, not an author)
 **Release:** [`ps2-review-v1`](../../releases/tag/ps2-review-v1)
-**Exact commit:** `68901fbcf4bee6fc35eded4b7a8d440e6359cdff`
+**Exact commit:** the commit tagged `ps2-review-v1` in this repository. That hash is recorded in Appendix A of the PS2 paper, in the A0 poster caption, and in the Canvas submission note, so the artifact need not embed a hash of itself.
 
 This repository is the smallest reproducible demonstration used in the PS2 paper and the A0 poster. It compares three access regimes for a foundation model: closed API, licensed distillation, and open weights.
 
