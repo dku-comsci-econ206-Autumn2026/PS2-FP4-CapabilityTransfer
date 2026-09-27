@@ -1,0 +1,19 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+
+# Local virtual environments
+.venv/
+venv/
+env/
+
+# OS cruft
+.DS_Store
+__MACOSX/
+Thumbs.db
+desktop.ini
+
+# Local response records exported from the decision interface
+*.local.json

@@ -1,0 +1,3 @@
+mechanism,winner,payment,winner_utility,revenue,welfare,allocative_efficiency
+"Second-price, truthful benchmark",E1,7,2,7,9,1.0
+"First-price, assumed 20% shading",E1,7.2,1.7999999999999998,7.2,9,1.0

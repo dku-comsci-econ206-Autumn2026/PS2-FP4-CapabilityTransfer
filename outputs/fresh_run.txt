@@ -1,0 +1,7 @@
+Private choice: Closed API
+Social-welfare choice: Open weights
+ECTO at budget 0.25: closed=0.00, licensed=0.65, open=0.80
+Minimum tax on closed regime to induce licensed distillation: 0.203
+Minimum subsidy to open weights, after closed is displaced, to beat licensed distillation: 0.188
+Auction: both treatments allocate the voucher to E1; second-price payment=7.0, first-price illustrative payment=7.2.
+Evidence status: deterministic output under illustrative, uncalibrated parameters.
