@@ -1,25 +1,33 @@
-/* 判定：k 落在哪一段。单位：E_d = 1, C_d = 0。 */
-function verdict(k, L, dC, dE) {
-  const lines = { open: L, innovate: dC / dE };   // 两条门槛
-  const lower = Math.max(lines.open, lines.innovate);
-  const willOpen    = k > lines.open;             // 蒸馏者愿意公开
-  const willInnovate = k > lines.innovate;        // 有人愿意自己做
-  let state;
-  if (!willOpen) state = "secrecy";               // 没人公开：全闭源
-  else if (!willInnovate) state = "imitation";    // 公开了但没人自己做：全蒸馏
-  else state = "healthy";
-  return { lines, lower, willOpen, willInnovate, state };
+/* Two policies.
+   flat   : everyone who discloses gets the same prize R = k * E_d
+   perE   : the prize is paid per unit of the firm's own training budget, k * E
+   Units: E_d = 1, C_d = 0  =>  E_n = 1 + dE, C_n = dC
+*/
+
+function verdictFlat(k, L) {
+  const willOpen = k > L;
+  return { lower: L, willOpen, willInnovate: false, state: willOpen ? "imitation" : "secrecy" };
 }
 
-/* 四格净收益。E_d = 1, C_d = 0 => E_n = 1 + dE, C_n = dC */
-function payoff(k, L, dC, dE) {
-  const En = 1 + dE;
-  return {
-    imitateClosed:  0,
-    imitateOpen:    k * 1 - L,
-    innovateClosed: -dC,
-    innovateOpen:   -dC + k * En - L,
-  };
+function verdictPerE(k, L, dC, dE) {
+  const lower = Math.max(L, dC / dE);
+  const willOpen = k > L;
+  const willInnovate = k > dC / dE;
+  return { lower, willOpen, willInnovate, state: !willOpen ? "secrecy" : willInnovate ? "healthy" : "imitation" };
 }
 
-if (typeof module !== "undefined") module.exports = { verdict, payoff };
+function payoffFlat(k, L, dC) {
+  return { imitateClosed: 0, imitateOpen: k * 1 - L, innovateClosed: -dC, innovateOpen: k - dC - L };
+}
+
+function payoffPerE(k, L, dC, dE) {
+  return { imitateClosed: 0, imitateOpen: k * 1 - L, innovateClosed: -dC, innovateOpen: k * (1 + dE) - dC - L };
+}
+
+/* The one number that separates the two policies: originate minus disclose */
+function originateGap(k, dC, dE, policy) {
+  return policy === "flat" ? -dC : k * dE - dC;
+}
+
+if (typeof module !== "undefined")
+  module.exports = { verdictFlat, verdictPerE, payoffFlat, payoffPerE, originateGap };
