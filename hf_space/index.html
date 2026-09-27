@@ -7,50 +7,70 @@
 <style>
   :root { --ink:#18324a; --blue:#315efb; --teal:#14877d; --red:#c0392b; --amber:#b8860b; --line:#dbe2ec; }
   * { box-sizing: border-box; }
-  body { margin:0; padding:28px 20px 48px; font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  body { margin:0; padding:28px 20px 56px; font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
          color:var(--ink); background:#f7f9fc; }
-  main { max-width:760px; margin:0 auto; }
-  h1 { font-size:26px; margin:0 0 4px; }
-  .sub { color:#5b6b7f; margin:0 0 24px; font-size:14px; }
-  .card { background:#fff; border:1px solid var(--line); border-radius:10px; padding:18px 20px; margin-bottom:16px; }
-  .row { display:flex; align-items:center; gap:14px; margin:10px 0; }
-  .row label { width:120px; font-weight:600; font-size:14px; }
+  main { max-width:820px; margin:0 auto; }
+  h1 { font-size:25px; margin:0 0 6px; }
+  .lead { color:#4a5a6e; margin:0 0 22px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px 18px; margin-bottom:14px; }
+  .row { display:flex; align-items:center; gap:14px; margin:9px 0; }
+  .row label { width:118px; font-weight:600; font-size:14px; }
   .row input[type=range] { flex:1; }
-  .row .val { width:64px; text-align:right; font-variant-numeric:tabular-nums; font-weight:600; color:var(--blue); }
-  #k { width:100%; }
-  .big { font-size:34px; font-weight:700; font-variant-numeric:tabular-nums; color:var(--blue); }
-  .state { font-size:20px; font-weight:700; padding:10px 14px; border-radius:8px; display:inline-block; }
+  .row .val { width:60px; text-align:right; font-variant-numeric:tabular-nums; font-weight:600; color:var(--blue); }
+  .kbig { font-size:32px; font-weight:700; font-variant-numeric:tabular-nums; color:var(--blue); }
+  .state { font-size:19px; font-weight:700; padding:9px 13px; border-radius:8px; display:inline-block; }
   .s-secrecy { background:#fdecea; color:var(--red); }
   .s-imitation { background:#fdf4e3; color:var(--amber); }
   .s-healthy { background:#e8f6f4; color:var(--teal); }
-  .note { color:#5b6b7f; font-size:14px; margin:10px 0 0; }
+  .note { color:#5b6b7f; font-size:14px; margin:8px 0 0; }
   table { border-collapse:collapse; width:100%; font-size:15px; }
-  th, td { text-align:left; padding:7px 8px; border-bottom:1px solid var(--line); }
+  th, td { text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
   th { font-size:13px; text-transform:uppercase; letter-spacing:.04em; color:#5b6b7f; }
-  td.num { text-align:right; font-variant-numeric:tabular-nums; }
-  tr.pick td { background:#eef3ff; font-weight:600; }
+  td:first-child { font-weight:600; }
+  .tag { display:block; font-weight:700; color:var(--ink); }
+  .act { display:block; font-size:13px; color:#6b7a8d; }
+  b.num { display:block; font-size:17px; font-variant-numeric:tabular-nums; color:var(--blue); margin-top:3px; }
+  tr.pick td { background:#eef3ff; }
+  tr.pick .tag::after { content:" ← best"; color:var(--teal); font-size:12px; }
   code { background:#eef2f8; padding:1px 5px; border-radius:4px; font-size:14px; }
-  .hits { font-size:15px; margin:6px 0; }
-  .yes { color:var(--teal); font-weight:600; }
-  .no { color:var(--red); font-weight:600; }
+  .hits { font-size:14px; margin:5px 0; color:#4a5a6e; }
+  .yes { color:var(--teal); font-weight:700; }
+  .no { color:var(--red); font-weight:700; }
+  footer { color:#5b6b7f; font-size:14px; margin-top:22px; border-top:1px solid var(--line); padding-top:14px; }
+  footer h2 { font-size:15px; color:var(--ink); margin:0 0 6px; }
+  footer p { margin:0 0 8px; }
 </style>
 </head>
 <body>
 <main>
   <h1>Prize Rate Game</h1>
-  <p class="sub">Firms choose <b>imitate or innovate</b>, then <b>openness or secrecy</b>. A prize rate
-    <code>k</code> pays for disclosure, per unit of training budget <code>E</code>. Units: <code>E_d = 1</code>, <code>C_d = 0</code>.</p>
+  <p class="lead">A firm distils another model, then chooses <b>openness</b> or <b>secrecy</b>.
+    A prize rate <code>k</code> pays for disclosure, per unit of training budget <code>E</code>.
+    Units: <code>E_d = 1, C_d = 0</code>.</p>
 
   <div class="card">
     <div class="row"><label>k &nbsp;(prize)</label><input id="k" type="range" min="0" max="8" step="0.05" value="0.5"></div>
-    <div class="big"><span id="kval">0.50</span></div>
-    <p class="note">Lower bound: <code id="lower">—</code></p>
+    <div class="kbig"><span id="kval">0.50</span></div>
+    <p class="note">Needs <code>k &gt; max(L, ΔC/ΔE)</code> = <span id="lower">—</span></p>
   </div>
 
   <div class="card">
-    <div class="row"><label>L &nbsp;(loss)</label><input id="L" type="range" min="0" max="5" step="0.05" value="1"><span class="val" id="Lval">1.00</span></div>
-    <div class="row"><label>ΔC &nbsp;(cost gap)</label><input id="dC" type="range" min="0" max="5" step="0.05" value="2"><span class="val" id="dCval">2.00</span></div>
-    <div class="row"><label>ΔE &nbsp;(budget gap)</label><input id="dE" type="range" min="0.1" max="5" step="0.05" value="1"><span class="val" id="dEval">1.00</span></div>
+    <table>
+      <thead><tr><th></th><th>secrecy</th><th>openness</th></tr></thead>
+      <tbody>
+        <tr id="r-imit">
+          <td>imitate</td>
+          <td><span class="tag">free-ride</span><span class="act">take, give nothing</span><b class="num" id="a1">—</b></td>
+          <td><span class="tag">disclose</span><span class="act">take, give back</span><b class="num" id="a2">—</b></td>
+        </tr>
+        <tr id="r-inno">
+          <td>innovate</td>
+          <td><span class="tag">keep</span><span class="act">make, give nothing</span><b class="num" id="b1">—</b></td>
+          <td><span class="tag">originate</span><span class="act">make, give back</span><b class="num" id="b2">—</b></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="note">Best cell is highlighted.</p>
   </div>
 
   <div class="card">
@@ -60,22 +80,30 @@
   </div>
 
   <div class="card">
-    <table>
-      <thead><tr><th></th><th>secrecy</th><th>openness</th></tr></thead>
-      <tbody>
-        <tr id="r-imit"><td>imitate</td><td class="num" id="a1">—</td><td class="num" id="a2">—</td></tr>
-        <tr id="r-inno"><td>innovate</td><td class="num" id="b1">—</td><td class="num" id="b2">—</td></tr>
-      </tbody>
-    </table>
-    <p class="note">Best cell is highlighted. Derivation: <code>k_formula.ipynb</code>.</p>
+    <div class="row"><label>L &nbsp;(loss)</label><input id="L" type="range" min="0" max="5" step="0.05" value="1"><span class="val" id="Lval">1.00</span></div>
+    <div class="row"><label>ΔC &nbsp;(cost gap)</label><input id="dC" type="range" min="0" max="5" step="0.05" value="2"><span class="val" id="dCval">2.00</span></div>
+    <div class="row"><label>ΔE &nbsp;(budget gap)</label><input id="dE" type="range" min="0.1" max="5" step="0.05" value="1"><span class="val" id="dEval">1.00</span></div>
   </div>
+
+  <footer>
+    <h2>What this is</h2>
+    <p>Nearly all frontier capability now moves by distillation. After distilling, a firm picks
+      one of the four cells above. Paying for disclosure is the obvious policy, but a flat prize
+      pays the free-rider as much as the originator, so nobody builds the original.</p>
+    <p>This page locates two thresholds on <code>k</code>. Below both, the market is all
+      <b>secrecy</b>. Between them, everyone discloses but nobody innovates: all
+      <b>imitation</b>. Above both, the two coexist. Paying per unit of <code>E</code> is what
+      makes the second threshold exist at all.</p>
+    <p>No calibrated numbers: <code>L</code>, <code>ΔC</code>, <code>ΔE</code> are yours to set.
+      Derivation in <code>k_formula.ipynb</code>; sources in the README.</p>
+  </footer>
 </main>
 <script src="model.js"></script>
 <script>
 const $ = id => document.getElementById(id);
 const S = { secrecy:["secrecy","s-secrecy","Nobody discloses: all closed, high prices."],
-            imitation:["imitation","s-imitation","Disclosure pays, but nobody innovates: everyone distills."],
-            healthy:["healthy","s-healthy","Someone innovates, someone discloses."] };
+            imitation:["imitation","s-imitation","Disclosure pays, but nobody innovates: everyone distils."],
+            healthy:["healthy","s-healthy","Someone originates, someone discloses."] };
 
 function render() {
   const k = +$("k").value, L = +$("L").value, dC = +$("dC").value, dE = +$("dE").value;
@@ -88,12 +116,12 @@ function render() {
   const [name, cls, blurb] = S[v.state];
   $("state").className = "state " + cls;
   $("state").textContent = name + " — " + blurb;
-  $("lower").textContent = "k > max( L , ΔC/ΔE ) = " + v.lower.toFixed(2);
+  $("lower").textContent = v.lower.toFixed(2);
 
-  $("h1").innerHTML = "k &gt; L &nbsp;(" + k.toFixed(2) + " &gt; " + L.toFixed(2) + ") &nbsp;→&nbsp; disclosure &nbsp;<span class='" +
-                      (v.willOpen ? "yes'>yes" : "no'>no") + "</span>";
-  $("h2").innerHTML = "k &gt; ΔC/ΔE &nbsp;(" + k.toFixed(2) + " &gt; " + (dC/dE).toFixed(2) + ") &nbsp;→&nbsp; someone innovates &nbsp;<span class='" +
-                      (v.willInnovate ? "yes'>yes" : "no'>no") + "</span>";
+  $("h1").innerHTML = "k &gt; L (" + k.toFixed(2) + " &gt; " + L.toFixed(2) +
+    ") → disclosure <span class='" + (v.willOpen ? "yes'>yes" : "no'>no") + "</span>";
+  $("h2").innerHTML = "k &gt; ΔC/ΔE (" + k.toFixed(2) + " &gt; " + (dC/dE).toFixed(2) +
+    ") → someone innovates <span class='" + (v.willInnovate ? "yes'>yes" : "no'>no") + "</span>";
 
   const p = payoff(k, L, dC, dE);
   $("a1").textContent = p.imitateClosed.toFixed(2);
@@ -101,10 +129,11 @@ function render() {
   $("b1").textContent = p.innovateClosed.toFixed(2);
   $("b2").textContent = p.innovateOpen.toFixed(2);
 
-  const cells = [["a1",p.imitateClosed],["a2",p.imitateOpen],["b1",p.innovateClosed],["b2",p.innovateOpen]];
-  const best = Math.max(...cells.map(c => c[1]));
-  cells.forEach(([id]) => $(id).parentElement.classList.remove("pick"));
-  cells.filter(c => c[1] === best).forEach(([id]) => $(id).parentElement.classList.add("pick"));
+  const rows = [["r-imit", Math.max(p.imitateClosed, p.imitateOpen)],
+                ["r-inno", Math.max(p.innovateClosed, p.innovateOpen)]];
+  const best = Math.max(...rows.map(r => r[1]));
+  rows.forEach(([id]) => $(id).classList.remove("pick"));
+  rows.filter(r => r[1] === best).forEach(([id]) => $(id).classList.add("pick"));
 }
 ["k","L","dC","dE"].forEach(id => $(id).addEventListener("input", render));
 render();
