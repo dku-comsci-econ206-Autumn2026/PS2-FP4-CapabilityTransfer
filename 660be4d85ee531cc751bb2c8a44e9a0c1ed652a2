@@ -1,0 +1,1 @@
+Authors re-ran 'python model.py' from an emptied outputs/ directory on 2026-09-27 and confirmed all three output files regenerate byte-identically.
