@@ -1,0 +1,30 @@
+Fresh run. Seed 206, N = 20000, logit best response with lambda = 1.0.
+Level constants calibrated to the paper's Table 2 (residual 7.4e-5).
+
+Table 2  Reward design and market outcome
+reward rule              (1)/(2)/(3)/(4)              state
+none, k = 0              0.96/0.00/0.04/0.00        1 closed
+openness, R = 20         0.11/0.85/0.00/0.04        2 distill
+indexed, k = 4           0.35/0.00/0.01/0.64        3 healthy
+indexed, capped, k = 12  0.42/0.54/0.02/0.03        2 distill
+
+Dominant at k = 0: decision (1) with share 0.96.
+Openness-only reward never lifts sources above 0.04 and ends in state 2.
+Indexed reward reaches state 3 at k = 4, with (4) modal at 0.64.
+Capping the reward so small-E and large-E releases are paid alike returns the market to state 2.
+
+Analytic thresholds: disclosure needs k > L, innovation needs k > dC/dE.
+  L = 2.5193      dC/dE = 1.1591
+
+Compute account
+  F(T) = 1 - exp(-T/T0), T0 = 25, delta = 0.95, c_d = 1.0, 100 firms, 5 rounds
+  Mutual distillation: frontier 1.000 -> 0.950 -> 0.902 -> 0.857 -> 0.815 -> 0.774
+    copying a copy only decays; 500 compute units spent for no new capability.
+
+  Social loss  c_e*B + rho*max(0,T-T0) - v*F(T),  B = 100, rho = 0.01, v = 1, c_e = 0.02
+    all distill    +2.00
+    all train      +1.77
+    t* = 0.35      +1.35
+  A positive distillation share is efficient: it stops every firm from paying
+  to re-derive the same result. Distillation is cheap, but never free, so the
+  reward metric must be E.

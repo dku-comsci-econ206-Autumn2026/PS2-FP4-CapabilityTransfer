@@ -9,34 +9,31 @@
   * { box-sizing: border-box; }
   body { margin:0; padding:26px 18px 56px; font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
          color:var(--ink); background:#f7f9fc; }
-  main { max-width:880px; margin:0 auto; }
+  main { max-width:900px; margin:0 auto; }
   h1 { font-size:24px; margin:0 0 6px; }
-  h2 { font-size:15px; margin:0 0 8px; color:var(--ink); }
+  h2 { font-size:15px; margin:0 0 10px; }
   .lead { color:#4a5a6e; margin:0 0 20px; }
   .card { background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px 18px; margin-bottom:14px; }
-  .row { display:flex; align-items:center; gap:14px; margin:9px 0; }
-  .row label { width:118px; font-weight:600; font-size:14px; }
-  .row input[type=range] { flex:1; }
-  .row .val { width:58px; text-align:right; font-variant-numeric:tabular-nums; font-weight:600; color:var(--blue); }
-  .kbig { font-size:30px; font-weight:700; font-variant-numeric:tabular-nums; color:var(--blue); }
+  .row { display:flex; align-items:center; gap:12px; margin:9px 0; flex-wrap:wrap; }
+  .row label { font-weight:600; font-size:14px; }
+  .row input[type=range] { flex:1; min-width:160px; }
+  .val { font-variant-numeric:tabular-nums; font-weight:600; color:var(--blue); min-width:52px; text-align:right; }
   table { border-collapse:collapse; width:100%; font-size:14px; }
-  th, td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th, td { text-align:left; padding:8px 9px; border-bottom:1px solid var(--line); vertical-align:middle; }
   th { font-size:12px; text-transform:uppercase; letter-spacing:.04em; color:#5b6b7f; }
-  th.pol { color:var(--ink); }
-  td:first-child { font-weight:600; }
-  .cell { display:block; font-weight:600; }
-  .act { display:block; font-size:12px; color:#6b7a8d; font-weight:400; }
-  td.num { font-variant-numeric:tabular-nums; color:var(--blue); font-weight:600; }
-  tr.pick td.num { background:#eef3ff; }
-  tr.pick td.num::after { content:" ←"; color:var(--teal); }
+  td.c, th.c { text-align:center; }
+  .rd { font-size:13px; color:#6b7a8d; font-weight:400; }
+  .best { background:#eef3ff; }
   .state { font-size:15px; font-weight:700; padding:7px 11px; border-radius:7px; display:inline-block; }
-  .s-secrecy { background:#fdecea; color:var(--red); }
-  .s-imitation { background:#fdf4e3; color:var(--amber); }
-  .s-healthy { background:#e8f6f4; color:var(--teal); }
-  .note { color:#5b6b7f; font-size:13px; margin:8px 0 0; }
-  .pair { display:flex; gap:12px; flex-wrap:wrap; }
-  .pair > div { flex:1 1 260px; }
+  .s1 { background:#fdecea; color:var(--red); }
+  .s2 { background:#fdf4e3; color:var(--amber); }
+  .s3 { background:#e8f6f4; color:var(--teal); }
+  .note { color:#5b6b7f; font-size:13px; margin:9px 0 0; }
   code { background:#eef2f8; padding:1px 5px; border-radius:4px; font-size:13px; }
+  .rules { display:flex; gap:8px; flex-wrap:wrap; }
+  .rules button { font:inherit; font-size:13.5px; padding:6px 12px; border:1px solid var(--line);
+                  background:#fff; border-radius:7px; cursor:pointer; color:var(--ink); }
+  .rules button[aria-pressed=true] { border-color:var(--blue); color:var(--blue); font-weight:700; background:#eef3ff; }
   footer { color:#5b6b7f; font-size:13.5px; margin-top:20px; border-top:1px solid var(--line); padding-top:14px; }
   footer p { margin:0 0 8px; }
 </style>
@@ -44,111 +41,124 @@
 <body>
 <main>
   <h1>Prize Rate Game</h1>
-  <p class="lead">A firm distils another model, then chooses <b>openness</b> or <b>secrecy</b>.
-    Two ways to pay for disclosure, shown side by side. Units: <code>E_d = 1, C_d = 0</code>.</p>
+  <p class="lead">Pay for training, not for openness. Four decisions: a firm <b>distils</b> or
+    <b>trains</b>, then keeps the model <b>closed</b> for monopoly profit <code>&pi;</code> or
+    <b>opens</b> it for a reward <code>kE</code> while losing exclusivity <code>L</code>.</p>
 
   <div class="card">
-    <div class="pair">
-      <div><h2>flat prize — everyone who discloses gets <code>k·E_d</code></h2>
-        <div class="state s-healthy" id="state-flat">—</div></div>
-      <div><h2>per-unit prize — paid per unit of own budget, <code>k·E</code></h2>
-        <div class="state s-healthy" id="state-pere">—</div></div>
+    <h2>Reward rule</h2>
+    <div class="rules" id="rules">
+      <button data-rule="none">none, k = 0</button>
+      <button data-rule="openness">Tool 1 — openness only, lump sum R = 20</button>
+      <button data-rule="indexed" aria-pressed="true">Tool 2 — indexed by training compute, kE</button>
+      <button data-rule="capped">indexed, capped at 12</button>
     </div>
-    <div class="row" style="margin-top:16px"><label>k &nbsp;(prize)</label>
-      <input id="k" type="range" min="0" max="8" step="0.05" value="0.5">
-      <span class="val" id="kval">0.50</span></div>
+    <div class="row" style="margin-top:12px">
+      <label>k</label>
+      <input id="k" type="range" min="0" max="8" step="0.05" value="4">
+      <span class="val" id="kval">4.00</span>
+      <span class="state s3" id="state">—</span>
+    </div>
+    <p class="note" id="thr">—</p>
   </div>
 
   <div class="card">
-    <h2>Table 1 — payoffs of the four cells</h2>
+    <h2>Table 1 &nbsp;The four decisions</h2>
     <table>
-      <thead><tr><th>cell</th><th class="pol">flat prize</th><th class="pol">per-unit prize</th></tr></thead>
+      <thead><tr><th>Decision</th><th>Payoff</th><th class="c">Priv.</th><th class="c">Soc.</th><th>Reading</th></tr></thead>
+      <tbody id="t1"></tbody>
+    </table>
+    <p class="note">The private ranking <b>(1) &gt; (3) &gt; (2) &gt; (4)</b> exactly reverses the social
+      ranking <b>(4) &gt; (2) &gt; (3) &gt; (1)</b>: the privately best decision is cheap and exclusive
+      but destroys the source.</p>
+  </div>
+
+  <div class="card">
+    <h2>Table 2 &nbsp;Reward design and market outcome <span class="rd">(fresh run, N = 20000, seed 206)</span></h2>
+    <table>
+      <thead><tr><th>Reward rule</th><th class="c">(1)/(2)/(3)/(4)</th><th>State</th></tr></thead>
+      <tbody id="t2"></tbody>
+    </table>
+    <p class="note">Openness-only rewards never lift the share of sources above 0.04 and end in state 2.
+      Indexed rewards hold state 3 from k &ge; 3, with (4) modal from k = 4. Capping so that small-E and
+      large-E releases are paid alike removes the differential and returns the market to state 2.</p>
+  </div>
+
+  <div class="card">
+    <h2>The reward is an all-pay auction</h2>
+    <table>
       <tbody>
-        <tr id="r1"><td><span class="cell">free-ride</span><span class="act">imitate · secrecy</span></td>
-          <td class="num" id="f1">—</td><td class="num" id="p1">—</td></tr>
-        <tr id="r2"><td><span class="cell">disclose</span><span class="act">imitate · openness</span></td>
-          <td class="num" id="f2">—</td><td class="num" id="p2">—</td></tr>
-        <tr id="r3"><td><span class="cell">keep</span><span class="act">innovate · secrecy</span></td>
-          <td class="num" id="f3">—</td><td class="num" id="p3">—</td></tr>
-        <tr id="r4"><td><span class="cell">originate</span><span class="act">innovate · openness</span></td>
-          <td class="num" id="f4">—</td><td class="num" id="p4">—</td></tr>
+        <tr><td>Scarce resource</td><td>the annual public reward budget</td></tr>
+        <tr><td>Bid</td><td>the verified training compute <code>E</code> of the release</td></tr>
+        <tr><td>Payment</td><td>every firm pays its bid, because training is sunk whether or not it wins</td></tr>
+        <tr><td>Allocation</td><td>highest verified <code>E</code> takes the prize; a shared budget pays <code>E/E<sub>max</sub></code></td></tr>
+        <tr><td>Stopping rule</td><td>budget exhausted</td></tr>
+        <tr><td>Predicted equilibrium</td><td>over-dissipation: bids rise past the socially optimal training level until the cap binds</td></tr>
+        <tr><td>Efficiency measured as</td><td>share of firms choosing (4); revenue = public spending per unit of new capability</td></tr>
       </tbody>
     </table>
-    <p class="note">Best cell in each column is marked ←.</p>
-  </div>
-
-  <div class="card">
-    <h2>Table 2 — what the two policies do</h2>
-    <table>
-      <thead><tr><th></th><th class="pol">flat prize</th><th class="pol">per-unit prize</th></tr></thead>
-      <tbody>
-        <tr><td>originate − disclose</td><td class="num" id="g1">—</td><td class="num" id="g2">—</td></tr>
-        <tr><td>can originate ever win?</td><td id="w1">—</td><td id="w2">—</td></tr>
-        <tr><td>market once k is large</td><td id="o1">—</td><td id="o2">—</td></tr>
-      </tbody>
-    </table>
-    <p class="note">Same money, different recipient. Flat pays the act of disclosing; per-unit also pays
-      for the training behind it, so only the originator's pay rises with <code>ΔE</code>.</p>
-  </div>
-
-  <div class="card">
-    <div class="row"><label>L &nbsp;(loss)</label><input id="L" type="range" min="0" max="5" step="0.05" value="1"><span class="val" id="Lval">1.00</span></div>
-    <div class="row"><label>ΔC &nbsp;(cost gap)</label><input id="dC" type="range" min="0" max="5" step="0.05" value="2"><span class="val" id="dCval">2.00</span></div>
-    <div class="row"><label>ΔE &nbsp;(budget gap)</label><input id="dE" type="range" min="0.1" max="5" step="0.05" value="1"><span class="val" id="dEval">1.00</span></div>
-    <p class="note">Set ΔE to its minimum to see the per-unit column collapse onto the flat one.</p>
   </div>
 
   <footer>
-    <p>Nearly all frontier capability now moves by distillation. After distilling, a firm lands in one
-      of the four cells. Paying for disclosure is the obvious policy — but <b>how</b> you pay decides
-      whether anyone still builds the original.</p>
-    <p>Flat pays <b>free-ride</b> and <b>originate</b> the same amount, so <b>originate</b> is always
-      short by <code>ΔC</code> and never wins: the market ends at all-<b>imitation</b>. Per-unit pays
-      the originator for the larger budget it ran, which is the only reason a second threshold exists — 
-      above it, <b>originate</b> and <b>disclose</b> coexist.</p>
-    <p>No calibrated numbers: <code>L</code>, <code>ΔC</code>, <code>ΔE</code> are yours to set.
-      Derivation in <code>k_formula.ipynb</code>; sources in the README.</p>
+    <p>Nearly all frontier capability now moves by distillation, and distillation is cheap but never free.
+      Current rules reward <b>openness</b>, so a distilled copy and an original source earn the same —
+      which is why the market can empty of sources.</p>
+    <p>Indexing the reward by training compute <code>E</code> separates the two open cells: the originator
+      collects the largest prize and the imitator the smallest. Paid flat, or capped, the two cells are
+      paid alike and nobody has a reason to train.</p>
+    <p>Levels are the paper's Appendix A parameters plus the six constants fitted to Table 2.
+      Simulation: <code>code/distill_sim.py</code>. Thresholds derived in <code>k_formula.ipynb</code>,
+      checked from scratch in <code>verify_k.py</code>.</p>
   </footer>
 </main>
 <script src="model.js"></script>
 <script>
 const $ = id => document.getElementById(id);
-const label = s => ({secrecy:["secrecy","s-secrecy"],imitation:["imitation","s-imitation"],healthy:["healthy","s-healthy"]}[s]);
+let rule = "indexed";
+
+const FM = { 1: "-C_d + \u03C0", 2: "-C_d + kE_d - L", 3: "-C_n + \u03C0", 4: "-C_n + kE_n - L" };
+const DESC = { 1: "closed, distill", 2: "open, distill", 3: "closed, train", 4: "open, train" };
 
 function render() {
-  const k = +$("k").value, L = +$("L").value, dC = +$("dC").value, dE = +$("dE").value;
+  const k = +$("k").value;
   $("kval").textContent = k.toFixed(2);
-  $("Lval").textContent = L.toFixed(2);
-  $("dCval").textContent = dC.toFixed(2);
-  $("dEval").textContent = dE.toFixed(2);
+  [...$("rules").children].forEach(b => b.setAttribute("aria-pressed", b.dataset.rule === rule));
 
-  // --- the two market states, side by side
-  [["state-flat", verdictFlat(k, L).state], ["state-pere", verdictPerE(k, L, dC, dE).state]]
-    .forEach(([id, s]) => { const [t, c] = label(s); $(id).className = "state " + c; $(id).textContent = t; });
+  const u = payoffs(rule, k);
+  const bestKey = Object.keys(u).reduce((a, b) => u[a] >= u[b] ? a : b);
 
-  // --- table 1
-  const pf = payoffFlat(k, L, dC), pp = payoffPerE(k, L, dC, dE);
-  const fv = [pf.imitateClosed, pf.imitateOpen, pf.innovateClosed, pf.innovateOpen];
-  const pv = [pp.imitateClosed, pp.imitateOpen, pp.innovateClosed, pp.innovateOpen];
-  fv.forEach((v, i) => $("f" + (i + 1)).textContent = v.toFixed(2));
-  pv.forEach((v, i) => $("p" + (i + 1)).textContent = v.toFixed(2));
-  const fbest = Math.max(...fv), pbest = Math.max(...pv);
-  [1, 2, 3, 4].forEach(i => {
-    $("r" + i).classList.toggle("pick", fv[i - 1] === fbest || pv[i - 1] === pbest);
-  });
+  $("t1").innerHTML = [1, 2, 3, 4].map(i => `
+    <tr class="${i == bestKey ? "best" : ""}">
+      <td><b>(${i})</b> ${DESC[i]}</td>
+      <td><code>${FM[i]}</code> <span class="rd">=</span> <b>${u[i].toFixed(2)}</b></td>
+      <td class="c">${PRIVATE_ORDER.indexOf(i) + 1}</td>
+      <td class="c">${SOCIAL_ORDER.indexOf(i) + 1}</td>
+      <td>${READING[i]}</td>
+    </tr>`).join("");
 
-  // --- table 2
-  const gf = originateGap(k, dC, dE, "flat"), gp = originateGap(k, dC, dE, "perE");
-  $("g1").textContent = gf.toFixed(2);
-  $("g2").textContent = gp.toFixed(2);
-  $("w1").innerHTML = "<span style='color:#c0392b;font-weight:700'>no</span> — always " + Math.abs(gf).toFixed(2) + " short";
-  $("w2").innerHTML = gp > 0
-    ? "<span style='color:#14877d;font-weight:700'>yes</span> — once k &gt; " + (dC / dE).toFixed(2)
-    : "<span style='color:#c0392b;font-weight:700'>no</span> — needs k &gt; " + (dC / dE).toFixed(2);
-  $("o1").innerHTML = "all <b>imitation</b>";
-  $("o2").innerHTML = "all <b>imitation</b> → <b>healthy</b>";
+  $("t2").innerHTML = TABLE2.map(r => `
+    <tr>
+      <td>${r.rule}</td>
+      <td class="c">${r.shares.map(v => v.toFixed(2)).join(" / ")}</td>
+      <td><span class="state s${r.state}">${STATE[r.state]}</span></td>
+    </tr>`).join("");
+
+  const t = thresholds();
+  let st;
+  if (rule === "none" || k <= t.disclosure) st = 1;
+  else if (rule === "capped" || k <= t.innovation) st = 2;
+  else st = 3;
+  $("state").className = "state s" + st;
+  $("state").textContent = STATE[st];
+  $("thr").innerHTML = "Disclosure needs <code>k &gt; (&#960; + L)/E_d = " + t.disclosure.toFixed(2) +
+    "</code> &nbsp;·&nbsp; innovation needs <code>k &gt; &Delta;C/&Delta;E = " + t.innovation.toFixed(2) + "</code>";
 }
-["k", "L", "dC", "dE"].forEach(id => $(id).addEventListener("input", render));
+
+$("rules").addEventListener("click", e => {
+  const b = e.target.closest("button");
+  if (b) { rule = b.dataset.rule; render(); }
+});
+$("k").addEventListener("input", render);
 render();
 </script>
 </body>
