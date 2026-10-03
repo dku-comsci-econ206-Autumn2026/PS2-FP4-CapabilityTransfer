@@ -60,56 +60,7 @@ choice, because audited compute is the only quantity in the table that a rule co
 Each substantive comment appears once, with its source, our decision, the change made, where
 it can be checked, and what still needs testing. Decisions are \textbf{Keep}, \textbf{Revise},
 or \textbf{Investigate}. Review-ready v1: September 27, 2026. Reviews and discussant feedback:
-September 28, 2026 symposium, IB 2050. Final v2: September 30, 2026.
-
-\subsection{Instructor, formal review of PS1}
-
-\paragraph{R1. Put a legible strategic representation in the paper itself; the README must show the same representation.}
-\emph{Decision:} Keep. \emph{Change:} Table~\ref{tab:four} carries the four decisions, their payoffs and
-the private and social ranks; the repository README carries the same matrix. \emph{Evidence:} PS2 PDF
-Section~2, Table~\ref{tab:four}; \texttt{README.md}; \GitHubLink. \emph{Remaining:} none.
-
-\paragraph{R2. State the game type precisely.}
-\emph{Decision:} Revise. \emph{Change:} Section~2 states the timing and information structure in one
-sentence: one simultaneous move, common-knowledge parameters, private cost and market-power draws that are
-not hidden strategically, so the implied concepts are dominance and Nash equilibrium rather than PBE.
-\emph{Evidence:} PS2 PDF Section~2. \emph{Remaining:} none; an extensive form is not claimed.
-
-\paragraph{R3. Use the solution concept implied by the structure, and show strategies and deviation checks.}
-\emph{Decision:} Revise. \emph{Change:} the paper reports the dominant strategy at $k=0$ and the equilibrium
-cell under each rule; the repository adds a deviation check. \emph{Evidence:} \path{verify_k.py};
-\GitHubLink. \emph{Remaining:} SPNE/PBE only if the release decision becomes sequential.
-
-\paragraph{R4. Computational verification must match the model (a course-tool benchmark, not a generic tutorial).}
-\emph{Decision:} Investigate. \emph{Change:} planned --- a NashPy benchmark that rebuilds the same four
-payoffs as a normal form and solves it (dominance, pure and mixed equilibrium), with its saved output
-released beside the code. \emph{Evidence:} \path{verify_k.py} and \path{k_formula.ipynb} today;
-benchmark pending. \emph{Remaining (planned):} the benchmark run and a self-contained auction solver.
-
-\paragraph{R5. Innovation Studio evidence: record the benchmark, the literature boundary, the overturning condition and the limitation.}
-\emph{Decision:} Investigate. \emph{Change:} planned --- run the Auction Design module (all-pay auctions)
-and the Static Games module for the $2\times2$ baseline, then export the result with a short reflection.
-\emph{Evidence:} pending. \emph{Remaining (planned):} not yet run.
-
-\paragraph{R6. Release traceability: cite the exact tested commit; the canonical release must expose inputs, parameters, seeds, code, saved outputs, checks, dependencies and one reproduction entry point.}
-\emph{Decision:} Revise. \emph{Change:} Appendix~A now lists the level constants and the future-share
-parameters, so the reported table is reproducible from the paper alone; the README lists setup, dependencies,
-run order, parameters, expected output and the exact commit. \emph{Evidence:} Appendix~A;
-\path{code/distill_sim.py}; \path{code/fresh_run_output.txt}; \GitHubLink{} at \ReleaseCommit{} (the tested
-revision is the merge's second parent, \texttt{0077ad6}; both trees are \texttt{dadbb0b2ee2e}).
-\emph{Remaining:} a pinned \path{requirements.txt} is now shipped.
-
-\paragraph{R7. The GitHub release must be the team repository inside the course organization, cited by organization URL plus commit.}
-\emph{Decision:} Keep, with a citation change. \emph{Change:} \GitHubLink{} is the canonical release, cited
-at commit \ReleaseCommit{} in the paper, the repository README and \path{k_formula.ipynb}. \emph{Evidence:}
-\GitHubLink{} (tree \texttt{383092e}). \emph{Remaining:} none.
-
-\paragraph{R8. Visual and release-quality gates (A4, body $\ge10$\,pt; one palette with hex codes; vector export; grayscale and colour-vision-deficiency check).}
-\emph{Decision:} Keep the PS2 template layout, with the trade-off recorded: the PS2 Overleaf template and the
-submission roadmap specify the two-page main paper in the template's own ACM layout, so we retain it and do
-not switch to an A4/10\,pt setting that would break the template and the two-page limit. The palette and the
-vector export are adopted. \emph{Change:} one palette defined once; vector figures. \emph{Evidence:}
-\texttt{main.tex}. \emph{Remaining (planned):} the grayscale and colour-vision-deficiency check.
+September 28, 2026 symposium, IB 2050. Final v2: October 6, 2026.
 
 \subsection{Instructor, immediate feedback in class}
 \TIAN{整栏留空：此处填张老师课堂即时反馈。每条给出：意见原文、我们的决定（Keep / Revise / Investigate）与理由、

@@ -1,12 +1,13 @@
 # Change map — PS2 revision
 
-> 编号与论文 Appendix D *Review response and revision record* 完全一致（R1–R15）。
-> 来源分组：R1–R8 张老师 PS1 正式评审 · R9–R10 课堂反馈 · R11–R13 peer reviewers · R14–R15 Han Zhang。
-> Appendix D 另记 R16–R17（你们自己写的两份评审，个人工作）。
+> 本文件是完整的回应清单（R1–R17）。论文 Appendix D 只保留四种反馈来源的留空栏位（课堂反馈、同学评审、
+> Han Zhang 讨论、我们提交的评审），**不再逐条收录**张老师 PS1 正式评审的 R1–R8；那八条的完整回应记在
+> 本文件里（下表 R1–R8），随时可核对。
+> 来源分组：R1–R8 张老师 PS1 正式评审 · R9–R10 课堂反馈 · R11–R13 peer reviewers · R14–R15 Han Zhang ·
+> R16–R17 你们自己写的两份评审（个人工作）。
 
 Reviewer point → author response → changed artifact → remaining limitation.
 Status tags: `done` · `in progress` · `planned`.
-Keep this file in sync with Appendix "Response to feedback" of the PS2 PDF.
 
 | # | Source | Point raised | Decision and reason | Change made | Evidence (file / section) | Remaining limitation | Status |
 |---|---|---|---|---|---|---|---|
