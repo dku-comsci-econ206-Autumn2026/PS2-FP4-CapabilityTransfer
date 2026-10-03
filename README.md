@@ -116,9 +116,9 @@ node hf_space/test.js           # "all tests passed"
 ```
 
 The paper's Table 2 two-panel numbers are the output of the first command; `outputs/fresh_run_output.txt`
-is the same file as `code/fresh_run_output.txt`. Every result file, `code/`, `verify_k.py` and `hf_space/`
-are unchanged since `383092e`; the only files edited afterwards carry this same citation — the README, the
-notebook, the paper copy in `paper/`, and the poster.
+is the same file as `code/fresh_run_output.txt`. Nothing in `code/`, `verify_k.py`, `hf_space/`, the
+notebook logic or the result files has changed since `383092e`, so the tested release stays reproducible at
+that commit; all later edits are documentation and the paper copy.
 
 ## License
 
