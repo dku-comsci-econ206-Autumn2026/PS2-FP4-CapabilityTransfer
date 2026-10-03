@@ -107,3 +107,35 @@ print("note: these thresholds are for a representative firm, a = m = 1. Firms ar
 print("      heterogeneous, so in the simulation state 3 needs a higher k (about 3).")
 print()
 print("all five claims hold")
+
+
+# ---------------------------------------------------------------- future market share
+# Added in the PS2 revision. Same parameters as code/distill_sim.py.
+BETA, PHI, K_EXT, M0 = 0.90, 0.50, 44.4, 0.50
+ECOSYSTEM = BETA * PHI * K_EXT
+
+
+def future(m, ecosystem=ECOSYSTEM, m0=M0):
+    """Value of the future market share an open release buys."""
+    return ecosystem * m / (m + m0)
+
+
+def openness_window(ecosystem=ECOSYSTEM, m0=M0):
+    """m where a firm opens at k = 0: future(m) > L + pi*m."""
+    import math
+    a, b, c = PI, PI * m0 + L - ecosystem, L * m0
+    disc = b * b - 4 * a * c
+    if disc <= 0:
+        return None
+    r = math.sqrt(disc)
+    return ((-b - r) / (2 * a), (-b + r) / (2 * a))
+
+
+if __name__ == "__main__" or True:
+    print()
+    print("future market share  beta=%.2f phi=%.2f K=%.1f m0=%.2f  => beta*phi*K=%.2f"
+          % (BETA, PHI, K_EXT, M0, ECOSYSTEM))
+    print("  future(m = 1) = %.3f" % future(1.0))
+    print("  disclosure with the motive, at m = 1:  k > %.2f" % ((L + PI - future(1.0)) / E_D))
+    w = openness_window()
+    print("  openness window in m: (%s)" % (", ".join("%.3f" % x for x in w) if w else "empty"))

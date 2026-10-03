@@ -1,0 +1,38 @@
+\resizebox{0.70\textwidth}{!}{%
+\begin{tikzpicture}[x=1pt,y=1pt,font=\sffamily,>=Latex]
+\tikzset{
+  heading/.style={font=\bfseries\fontsize{18}{20}\selectfont,text=CourseInk,align=center},
+  label/.style={font=\fontsize{12}{14}\selectfont,text=CourseInk,align=center},
+  mini/.style={draw=CourseBlue,line width=0.9pt,minimum width=62pt,minimum height=30pt,align=center,text=CourseInk,fill=white},
+  synthesis/.style={draw=CourseTeal,line width=1.1pt,minimum width=790pt,minimum height=44pt,align=center,text=CourseInk,fill=CourseTeal!3}
+}
+\node[heading] at (140,190) {Economics};
+\node[label] at (140,163) {Reward rule and the four decisions};
+\node[mini] (e1) at (75,120) {$C_d,C_n$\\$\pi,L$};
+\node[mini] (e2) at (140,120) {four\\decisions};
+\node[mini] (e3) at (205,120) {Nash\\market state};
+\draw[CourseBlue,-{Latex[length=7pt]}] (e1)--(e2);
+\draw[CourseBlue,-{Latex[length=7pt]}] (e2)--(e3);
+
+\node[heading] at (455,190) {Computer science};
+\node[label] at (455,163) {Capability, compute, and the frontier};
+\node[mini] (c1) at (390,120) {budget $B$\\$T+D$};
+\node[mini] (c2) at (455,120) {distill loop\\frontier $F$};
+\node[mini] (c3) at (520,120) {mix $t^\ast$\\fresh run};
+\draw[CourseBlue,-{Latex[length=7pt]}] (c1)--(c2);
+\draw[CourseBlue,-{Latex[length=7pt]}] (c2)--(c3);
+
+\node[heading] at (770,190) {Behavioral science};
+\node[label] at (770,163) {Imitation, loss aversion, and peer play};
+\node[mini] (b1) at (705,120) {benchmark\\(1) dominant};
+\node[mini] (b2) at (770,120) {peer play\\four decisions};
+\node[mini] (b3) at (835,120) {retain\\qualify revise};
+\draw[CourseBlue,-{Latex[length=7pt]}] (b1)--(b2);
+\draw[CourseBlue,-{Latex[length=7pt]}] (b2)--(b3);
+
+\node[synthesis] (s) at (455,45) {\textbf{\fontsize{17}{19}\selectfont Reward training, not openness}\\[3pt]
+\fontsize{12}{14}\selectfont Indexed reward $kE$ keeps (4) sources alive and prices down $\cdot$ GitHub verifies the simulation $\cdot$ Hugging Face runs the peer play};
+\draw[CourseTeal,dashed,-{Latex[length=8pt]}] (140,93)--(220,67);
+\draw[CourseTeal,dashed,-{Latex[length=8pt]}] (455,93)--(455,67);
+\draw[CourseTeal,dashed,-{Latex[length=8pt]}] (770,93)--(690,67);
+\end{tikzpicture}}

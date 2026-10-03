@@ -4,78 +4,104 @@ COMSCI/ECON 206 · Autumn 2026 · Instructor Luyao Zhang · **Zhengjun He, Yiche
 
 Paper: *Pay for Training, Not for Openness: Reward Design for Original and Distilled AI Models.*
 
-A firm **distils** or **trains**, then keeps the model **closed** for monopoly profit `pi`
-or **opens** it for a reward `kE` while losing exclusivity `L`. Four decisions:
+A firm **distils** or **trains**, then keeps the model **closed** for monopoly profit `pi` or **opens**
+it for a reward `kE` while losing exclusivity `L`. An open release also buys a share of the next
+generation of infrastructure, worth `beta*phi*K * m / (m + m0)`.
 
 | | closed | open |
 |---|---|---|
 | **distil** | (1) free rider | (2) passer-on |
 | **train** | (3) monopolist | (4) source |
 
-The private ranking `(1) > (3) > (2) > (4)` exactly reverses the social ranking
-`(4) > (2) > (3) > (1)`, so without policy the market stops at (1).
+The private ranking `(1) > (3) > (2) > (4)` reverses the social ranking `(4) > (2) > (3) > (1)` while the
+future-share motive is weak.
 
 **Live page:** <https://huggingface.co/spaces/dku-comsci-econ206-2026/FP4_PS2>
+
+## What this revision changed
+
+1. **A future market-share motive on the two open cells** (Han Zhang's comment). Notation follows the
+   published economics of open source: `beta` discount factor, `phi` ecosystem efficiency, `K` external
+   contributions, `m` the firm's share of compatible applications, `m0` the internal-capacity scale. The
+   term is `beta*phi*K * m/(m+m0)`, increasing and concave in `m`.
+2. **The earlier table is the special case `beta*phi*K = 0`.** Table 2 now has two panels, and the
+   simulation prints both.
+3. **Corrected thresholds.** Disclosure needs `k*E_d > L + pi*m - beta*phi*K`; with the motive off this is
+   `k > (L + pi)/E_d` (the familiar `k > L` assumed `pi = 0`). Innovation needs `k > dC/dE`, which the
+   motive does not affect because the term is common to both open cells.
+4. **An eight-family evidence table** (`EVIDENCE_TABLE.md`) on whether weights are downloadable, under
+   which licence, whether training compute is disclosed, and whether distillation is documented.
 
 ## Contents
 
 | File | What |
 |---|---|
-| `code/distill_sim.py` | fresh run; reproduces Table 2 and the compute account |
-| `code/fresh_run_output.txt` | its output log |
-| `k_formula.ipynb` | derives the two thresholds on `k` with sympy |
+| `code/distill_sim.py` | the fresh run; reproduces both panels of Table 2 and the compute account |
+| `outputs/fresh_run_output.txt` | its saved output log |
+| `k_formula.ipynb` | derives the two thresholds with sympy, then runs the two panels (outputs saved) |
 | `verify_k.py` | recomputes the four payoffs from scratch, no dependencies |
 | `hf_space/` | the interactive page (static Hugging Face Space) |
+| `hf_space/test.js` | logic tests for the page, including the new motive |
+| `paper/` | the manuscript source and the compiled PDF |
+| `EVIDENCE_TABLE.md` | open-weight evidence across eight model families, dated and sourced |
+| `CHANGE_MAP.md` | reviewer point to change made, kept in sync with the paper's Appendix D |
 
 ## Run
 
 ```bash
-python code/distill_sim.py          # Table 2 and the compute account
+pip install -r requirements.txt
+python code/distill_sim.py          # both panels of Table 2 and the compute account
 python verify_k.py                  # the four payoffs, from scratch
-pip install sympy jupyter
-jupyter notebook k_formula.ipynb    # the thresholds, symbolically
+jupyter notebook k_formula.ipynb    # the thresholds, symbolically and numerically
+node hf_space/test.js               # page logic, including the future-share motive
 ```
 
-Page: open `hf_space/index.html`. Logic check: `cd hf_space && node test.js`.
+Page: open `hf_space/index.html`.
+
+## Parameters
+
+`N = 20000`, `seed 206`, `sigma_a = sigma_m = 0.6`, `lambda = 1`, `delta = 0.95`, `c_d = 1`,
+100 firms, 5 rounds, `B = 100`, `T0 = 25`, `rho = 0.01`, `v = 1`, `c_e = 0.02`, cap `12`, `R = 20`.
+
+Level constants, calibrated so the run reproduces panel (a) (residual `7.4e-5`):
+`C_d = 1.4446`, `C_n = 5.6704`, `pi = 8.2391`, `L = 2.5193`, `E_d = 0.9854`, `E_n = 4.6311`.
+
+Future market-share motive: `beta = 0.90`, `phi = 0.50`, `K = 44.4`, `m0 = 0.50`, so `beta*phi*K = 19.98`.
 
 ## Result
 
 ```
-k > (pi + L) / E_d    disclosure beats closing   (Tool 1 gets this far)
-k > dC / dE           training beats distilling  (only Tool 2 gets here)
+disclosure                       motive off: k > 10.92     motive on: k > -2.60   (at m = 1)
+innovation                       k > dC/dE = 1.1591, either way
+
+panel (a) no future-share motive        panel (b) with the motive
+none, k = 0      0.96/0.00/0.04/0.00  1 none, k = 0      0.28/0.68/0.01/0.03  2
+openness, R = 20 0.11/0.85/0.00/0.04  2 openness, R = 20 0.01/0.95/0.00/0.04  2
+indexed, k = 4   0.35/0.00/0.01/0.64  3 indexed, k = 4   0.03/0.02/0.00/0.95  3
+indexed, cap = 12 0.42/0.54/0.02/0.03 2 indexed, cap = 12 0.03/0.93/0.00/0.05 2
 ```
 
-**Tool 1** pays a lump sum for any open release, so (2) and (4) receive the same amount
-and (2) wins at every level: nobody trains, sources run out, state 2.
-**Tool 2** pays per unit of reported training compute, so (4) collects the largest reward
-and (2) the smallest, which is the only reason a second threshold exists.
-
-Table 2 (seed 206, N = 20000), shares per decision:
-
-| Reward rule | (1)/(2)/(3)/(4) | State |
-|---|---|---|
-| none, k = 0 | .96 / .00 / .04 / .00 | 1 closed |
-| openness, R = 20 | .11 / .85 / .00 / .04 | 2 distill |
-| indexed, k = 4 | .35 / .00 / .01 / .64 | 3 healthy |
-| indexed, capped, k = 12 | .42 / .54 / .02 / .03 | 2 distill |
-
-Capping so that small-`E` and large-`E` releases are paid alike removes the differential
-and returns the market to state 2.
-
-## Parameters
-
-Appendix A gives `N = 20000`, `seed 206`, `sigma = 0.6`, `lambda = 1`, `delta = 0.95`,
-`T0 = 25`, `B = 100`, `rho = 0.01`, `v = 1`, `c_e = 0.02`, cap `12`, `R = 20`.
-The six level constants (`C_d`, `C_n`, `pi`, `L`, `E_d`, `E_n`) are fitted so the
-simulation reproduces Table 2, residual `7.4e-5`. They are listed at the top of
-`code/distill_sim.py`.
+With the motive off, no reward leaves the market closed. With it on, firms open with no reward at all —
+but what they open is a copy, so the market settles in state 2. The openness window in `m` is
+`(0.101, 1.519)`. Indexing the reward by training compute reaches state 3 either way, and capping it
+returns the market to state 2 either way.
 
 ## Sources
 
-- all-pay auction, over-dissipation — Baye, Kovenock & de Vries (1996), *Economic Theory* 8(2) 291–305
-- knowledge distillation — Hinton, Vinyals & Dean (2015), arXiv:1503.02531
-- optimal auction design — Myerson (1981); counterspeculation — Vickrey (1961)
-- equilibrium points — Nash (1950)
+- all-pay auction and over-dissipation — Baye, Kovenock & de Vries (1996, 1999)
+- knowledge distillation — Hinton, Vinyals & Dean (2015)
+- why firms open source — Lerner & Tirole (2002); von Hippel & von Krogh (2003); Fosfuri et al. (2008);
+  Habibi (2025, arXiv:2501.11581); Xu et al. (2025, arXiv:2510.15200)
+- openness regulation and compute governance — Qiu et al. (2025); Sastry et al. (2024); Epoch AI
+- model collapse under recursive distillation — Shumailov et al. (2024), *Nature*
+- industrial-scale distillation advisory — NSA/CISA/FBI AA26-251A (2026)
+
+Full list with DOIs: `paper/references.bib`.
+
+## Tested release
+
+Tested commit: **<fill in after the final push>**. The paper, README, notebook and Space must cite the
+same commit.
 
 ## License
 
