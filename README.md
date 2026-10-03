@@ -100,8 +100,25 @@ Full list with DOIs: `paper/references.bib`.
 
 ## Tested release
 
-Tested commit: **<fill in after the final push>**. The paper, README, notebook and Space must cite the
-same commit.
+Course-organization repository:
+<https://github.com/dku-comsci-econ206-Autumn2026/PS2-FP4-CapabilityTransfer>
+
+Tested commit: **`383092e`** (release merge in the course organization, 2026-10-03). It carries the tested
+revision `0077ad6`; both trees are `dadbb0b2ee2e`, so `git checkout 383092e` and `git checkout 0077ad6`
+give byte-identical working copies. The paper, this README and `k_formula.ipynb` cite the same commit.
+What was run at that commit, from a clean clone:
+
+```
+pip install -r requirements.txt
+python code/distill_sim.py      # reproduces code/fresh_run_output.txt byte for byte
+python verify_k.py              # "all five claims hold"
+node hf_space/test.js           # "all tests passed"
+```
+
+The paper's Table 2 two-panel numbers are the output of the first command; `outputs/fresh_run_output.txt`
+is the same file as `code/fresh_run_output.txt`. Every result file, `code/`, `verify_k.py` and `hf_space/`
+are unchanged since `383092e`; the only files edited afterwards carry this same citation — the README, the
+notebook, the paper copy in `paper/`, and the poster.
 
 ## License
 

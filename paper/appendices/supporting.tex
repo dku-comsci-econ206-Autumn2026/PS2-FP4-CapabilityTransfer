@@ -13,7 +13,7 @@
 \bibliographystyle{ACM-Reference-Format}\bibliography{references}
 \appendix
 \section{Technical details and reproducibility}
-Four payoffs per firm: (1) $-C_d+\pi$, (2) $-C_d+kE_d-L$, (3) $-C_n+\pi$, (4) $-C_n+kE_n-L$. Firm types: cost multiplier $a$ and market power $m$, drawn lognormal with $\sigma_a=\sigma_m=0.6$, $N=20000$, seed 206, NumPy 2.4.6. Choices use a logit best response with $\lambda=1$~\cite{mckelvey1995}. Level constants, calibrated so that the run reproduces column (a) of Table~\ref{tab:design} (residual $7.4\times10^{-5}$): $C_d=1.4446$, $C_n=5.6704$, $\pi=8.2391$, $L=2.5193$, $E_d=0.9854$, $E_n=4.6311$. Future-share motive: $\beta=0.90$, $\phi=0.50$, $K=44.4$, $m_0=0.50$, giving $\beta\phi K=19.98$~\cite{habibi2025}. Reward designs: (A) lump sum $R$ for any open release; (B) reward $kE$; (C) reward $\min(kE,12)$. Compute account: $F(T)=1-e^{-T/T_0}$, mutual-distillation loop with $\delta=0.95$, $c_d=1$, 100 firms, 5 rounds, and social loss $c_eB+\rho\max(0,T-T_0)-vF(T)$ with $B=100$, $T_0=25$, $\rho=0.01$, $v=1$, $c_e=0.02$. Outputs: \path{code/fresh_run_output.txt}. Shortest reproducible run: \texttt{python code/distill\_sim.py} (in this package). The repository holds \path{k_formula.ipynb}, which derives the two thresholds on $k$ with sympy, and \path{verify_k.py}, which recomputes the four cells from scratch and finds where the best cell changes. Results are deterministic. Known limits: the frontier, duplication price, and $\delta$ are illustrative, not estimated; firms are symmetric except for $a$ and $m$; no entry or exit; no data on real training compute. Repository status: \GitHubLink.
+Four payoffs per firm: (1) $-C_d+\pi$, (2) $-C_d+kE_d-L$, (3) $-C_n+\pi$, (4) $-C_n+kE_n-L$. Firm types: cost multiplier $a$ and market power $m$, drawn lognormal with $\sigma_a=\sigma_m=0.6$, $N=20000$, seed 206, NumPy 2.4.6. Choices use a logit best response with $\lambda=1$~\cite{mckelvey1995}. Level constants, calibrated so that the run reproduces column (a) of Table~\ref{tab:design} (residual $7.4\times10^{-5}$): $C_d=1.4446$, $C_n=5.6704$, $\pi=8.2391$, $L=2.5193$, $E_d=0.9854$, $E_n=4.6311$. Future-share motive: $\beta=0.90$, $\phi=0.50$, $K=44.4$, $m_0=0.50$, giving $\beta\phi K=19.98$~\cite{habibi2025}. Reward designs: (A) lump sum $R$ for any open release; (B) reward $kE$; (C) reward $\min(kE,12)$. Compute account: $F(T)=1-e^{-T/T_0}$, mutual-distillation loop with $\delta=0.95$, $c_d=1$, 100 firms, 5 rounds, and social loss $c_eB+\rho\max(0,T-T_0)-vF(T)$ with $B=100$, $T_0=25$, $\rho=0.01$, $v=1$, $c_e=0.02$. Outputs: \path{code/fresh_run_output.txt}. Shortest reproducible run: \texttt{python code/distill\_sim.py} (in this package). The repository holds \path{k_formula.ipynb}, which derives the two thresholds on $k$ with sympy, and \path{verify_k.py}, which recomputes the four cells from scratch and finds where the best cell changes. Results are deterministic. Known limits: the frontier, duplication price, and $\delta$ are illustrative, not estimated; firms are symmetric except for $a$ and $m$; no entry or exit; no data on real training compute. Repository status: \GitHubLink, release commit \ReleaseCommit.
 
 \subsection{AI-use disclosure}
 Generative AI (DeepSeek) was used only for typesetting, for debugging \texttt{distill\_sim.py}, and for locating references. The ideas, the model, and every test and number come from the authors, who reran the code at seed 206 and checked each value against Table~\ref{tab:design}.
@@ -95,13 +95,14 @@ and the Static Games module for the $2\times2$ baseline, then export the result 
 \emph{Decision:} Revise. \emph{Change:} Appendix~A now lists the level constants and the future-share
 parameters, so the reported table is reproducible from the paper alone; the README lists setup, dependencies,
 run order, parameters, expected output and the exact commit. \emph{Evidence:} Appendix~A;
-\path{code/distill_sim.py}; \path{code/fresh_run_output.txt}; \GitHubLink. \emph{Remaining (planned):}
-a pinned \path{requirements.txt}.
+\path{code/distill_sim.py}; \path{code/fresh_run_output.txt}; \GitHubLink{} at \ReleaseCommit{} (the tested
+revision is the merge's second parent, \texttt{0077ad6}; both trees are \texttt{dadbb0b2ee2e}).
+\emph{Remaining:} a pinned \path{requirements.txt} is now shipped.
 
 \paragraph{R7. The GitHub release must be the team repository inside the course organization, cited by organization URL plus commit.}
 \emph{Decision:} Keep, with a citation change. \emph{Change:} \GitHubLink{} is the canonical release, cited
-with its exact commit in the paper, README, notebook and Space. \emph{Evidence:} \GitHubLink.
-\emph{Remaining:} none.
+at commit \ReleaseCommit{} in the paper, the repository README and \path{k_formula.ipynb}. \emph{Evidence:}
+\GitHubLink{} (tree \texttt{383092e}). \emph{Remaining:} none.
 
 \paragraph{R8. Visual and release-quality gates (A4, body $\ge10$\,pt; one palette with hex codes; vector export; grayscale and colour-vision-deficiency check).}
 \emph{Decision:} Keep the PS2 template layout, with the trade-off recorded: the PS2 Overleaf template and the
