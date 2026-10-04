@@ -1,7 +1,7 @@
 \section{Three connected research questions and verified gap}
 A firm builds a model by training from scratch at cost $C_n$, or by distilling an existing model at cost $C_d\ll C_n$~\cite{hinton2015,acl2024distill}. It keeps the model closed for monopoly profit $\pi$, or releases it openly for a reward $kE$ --- coefficient $k$ times the training compute $E$ of the release --- while losing exclusivity at cost $L$.
 
-Today's rules reward \emph{openness}, so a distilled copy and an original source earn the same~\cite{qiu2025,epoch2025}. The market then settles in state 1 (all closed), state 2 (all distilled: no source, no new capability), or state 3 (healthy: enough sources, reasonable price). Verified gap: no comparison exists between a lump-sum reward for openness and a reward indexed by training compute.
+Today's rules reward \emph{openness}, so a distilled copy and an original source earn the same~\cite{qiu2025,epoch2025}. The market then settles in state 1 (all closed), state 2 (all distilled: no source, no new capability), or state 3 (healthy: enough sources, reasonable price). Verified gap: the nearest studies compare open with closed models~\cite{epoch2025} or model open sourcing~\cite{habibi2025}, but none compares a lump-sum openness reward with a compute-indexed reward over the same four decisions.
 
 \textbf{Q1---Economics:} Which reward rule aligns the private and social rankings of the four decisions?\par
 \textbf{Q2---Computation:} Does distillation create capability, or only spend compute?\par
@@ -9,9 +9,9 @@ Today's rules reward \emph{openness}, so a distilled copy and an original source
 Shared question: can an $E$-indexed reward hold state 3, at what $k$, and what share of compute should go to training? Figure~\ref{fig:teaser} links the three answers.
 
 \section{Answer to Q1: incentives and strategic model}
-Players: $N$ firms; actions $\{$closed, open$\}\times\{$distill, train$\}$; one simultaneous move; common-knowledge parameters with private cost multipliers and market power; objective: own payoff; solution concept: dominant strategies, then Nash equilibrium~\cite{nash1950,selten1975,harsanyi1968,osborne1994,fudenberg1991}. Table~\ref{tab:four} gives the four decisions.
+Players: $N$ firms; actions $\{$closed, open$\}\times\{$distill, train$\}$; one simultaneous move; common-knowledge parameters, with the cost multiplier and market power drawn before play and not hidden strategically; objective: own payoff; solution concept: dominant strategies, then Nash equilibrium~\cite{nash1950,selten1975,harsanyi1968,osborne1994,fudenberg1991}. Table~\ref{tab:four} gives the four decisions.
 
-\begin{table}[h]\caption{The four decisions, their payoffs, and the reversed rankings (1 = most wanted). An open release also keeps the future market share it buys, $\beta\phi K$: the discounted value of the external contributions an open model attracts~\cite{habibi2025,xu2025}.}
+\begin{table}[h]\caption{The four decisions, their payoffs, and the reversed rankings (1 = most wanted). An open release also keeps the future market share it buys, $\beta\phi K\,m/(m{+}m_0)$ --- the Future column, the discounted value of the external contributions an open model attracts~\cite{habibi2025,xu2025}.}
 \label{tab:four}
 \footnotesize\setlength{\tabcolsep}{3.5pt}\renewcommand{\arraystretch}{1.02}
 \begin{tabularx}{\columnwidth}{@{}p{1.85cm}p{2.05cm}p{0.95cm}ccY@{}}\toprule
@@ -22,11 +22,11 @@ Players: $N$ firms; actions $\{$closed, open$\}\times\{$distill, train$\}$; one 
 (4) open, train&$-C_n+kE_n-L$&$\beta\phi K$&4&1&source\\\bottomrule
 \end{tabularx}\end{table}
 
-The private ranking $(1)\succ(3)\succ(2)\succ(4)$ exactly reverses the social ranking $(4)\succ(2)\succ(3)\succ(1)$: the privately best decision is cheap and exclusive but destroys the source: knowledge is non-rival, so private returns fall short of social returns~\cite{arrow1962,romer1990}. Without policy the market stops at (1), a dominant strategy at $k=0$ because $-C_d+\pi>-C_n+\pi$ and $L$ is avoided.
+The private ranking $(1)\succ(3)\succ(2)\succ(4)$ exactly reverses the social ranking $(4)\succ(2)\succ(3)\succ(1)$: the privately best decision is cheap and exclusive but destroys the source: knowledge is non-rival, so private returns fall short of social returns~\cite{arrow1962,romer1990}. Without policy the market stops at (1), a dominant strategy at $k=0$.
 
-Tool 1 rewards openness only: (2) pays $R-C_d-L$ and (4) pays $R-C_n-L$, so since $C_n\gg C_d$, (2) beats (4) at every $R$ --- nobody trains, sources run out, state 2. Tool 2 indexes the reward by training compute, $kE$: (4) has large $E$, (2) has small $E$, and (1) and (3) receive nothing. Table~\ref{tab:design} reports the fresh run.
+Tool 1 rewards openness only, so (2) beats (4) at every $R$: nobody trains, sources run out, state 2. Tool 2 indexes the reward by training compute, $kE$: (4) has large $E$, (2) has small $E$, and (1) and (3) receive nothing. Table~\ref{tab:design} reports the fresh run.
 
-The future-share motive changes where an unregulated market settles. With it switched on, firms release weights with no reward at all, because openness buys a place in the next generation of infrastructure: at $k=0$ the share of firms opening rises from $0.00$ to $0.68$ and the market settles in state 2 rather than state 1 --- firms open, but what they open is a copy. Opening pays exactly for firms whose share of compatible applications lies between the two roots of $\beta\phi K\,m/(m+m_0)=L+\pi m$, the inverted-U relation the literature reports~\cite{habibi2025,xu2025}. The indexed reward still reaches state 3, and the cap still returns the market to state 2. \begin{table}[h]\caption{Reward design and market outcome (fresh run, $N=20000$, seed 206), share of firms per decision.}
+The future-share motive changes where an unregulated market settles. With it on, firms release weights with no reward at all, because openness buys a place in the next generation of infrastructure: at $k=0$ the share of firms opening rises from $0.00$ to $0.68$ and the market settles in state 2 rather than state 1 --- firms open, but what they open is a copy. Opening pays exactly for firms whose share of compatible applications lies between the two roots of $\beta\phi K\,m/(m+m_0)=L+\pi m$, the inverted-U relation the literature reports~\cite{habibi2025,xu2025}. The indexed reward still reaches state 3, and the cap still returns the market to state 2. \begin{table}[h]\caption{Reward design and market outcome (fresh run, $N=20000$, seed 206), share of firms per decision.}
 \label{tab:design}
 \footnotesize\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.02}
 \begin{tabularx}{\columnwidth}{@{}p{1.85cm}Yp{1.35cm}@{}}\toprule
@@ -46,11 +46,11 @@ indexed, capped, $k=12$&.03 / .93 / .00 / .05&2 distill\\\bottomrule
 The thresholds are analytic. Disclosure needs $kE_d>L+\pi-\beta\phi K$: with the motive off this is $k>(L+\pi)/E_d$ (the familiar $k>L$ assumed $\pi=0$), and with a strong motive disclosure pays at $k=0$. Innovation needs $k>\Delta C/\Delta E$, the cost and compute gaps between training and distilling, and this threshold is unaffected by the future-share motive because the term is common to both open cells~\cite{wright1983,nalebuff1983}. Appendix~C carries the three lenses.
 
 \section{Answer to Q2: computation, auction comparison, and artifacts}
-A distilled release is an open release under the current rule, so we treat distillation as part of open source --- which is why the reward must be indexed by $E$, not by openness. The reward is an all-pay auction~\cite{baye1996}: each firm's bid is its reported training compute $E$, every firm pays its bid because training is sunk whether or not it wins, and the prize goes to the highest verified $E$ (or is split in proportion to $E$). All-pay auctions dissipate rents, which is why the cap matters~\cite{baye1999,tullock1980}; the bid is real compute, not money, and $E$ is verifiable only by audit~\cite{sastry2024}.
+Openness is not only what a weight release produces. A model served through an interface is distilled by whoever queries it, at industrial scale~\cite{cisa2026}, so distillation is itself a degree of openness --- and a firm that bans accounts, caps usage, or writes distillation out of its terms is buying exclusivity back. Countermeasures are the mirror image of openness: the harder they bind, the less open the model really is, and a firm can move that quantity without releasing or withholding a single weight. We keep the release move binary --- the closed cell is the case where countermeasures fully bind and their cost sits inside $L$ --- but the reward is an all-pay auction~\cite{baye1996}: each firm's bid is its audited training compute $E$, every firm pays it because training is sunk whether or not it wins, and the prize goes to the highest verified $E$. Our rule pays proportionally instead ($kE$ per open release), so the analogy covers the payment side, not the allocation form. All-pay auctions dissipate rents, which is why the cap matters~\cite{baye1999,tullock1980}; the bid is real compute, verifiable only by audit~\cite{sastry2024}.
 
-Model: budget $B=T+D$ for training $T$ and distillation $D$; only training moves the frontier $F(T)=1-e^{-T/T_0}$~\cite{kaplan2020,hoffmann2022}, while distillation copies it with loss $\delta<1$ and still spends $c_d>0$. Metrics: decision shares, market state, and social loss $c_eB+\rho\max(0,T-T_0)-vF(T)$, with $\rho$ pricing duplicated effort~\cite{dasgupta1980} and $v$ the frontier. Pseudocode: draw each firm's type, evaluate the four payoffs, take the logit best response~\cite{mckelvey1995}, aggregate to the market state; seed 206, with parameters and output in Appendix~A.
+Model: budget $B=T+D$ for training $T$ and distillation $D$; only training moves the frontier $F(T)=1-e^{-T/T_0}$~\cite{kaplan2020,hoffmann2022}, while distillation copies it with loss $\delta<1$. Metrics: decision shares, market state, and social loss $c_eB+\rho\max(0,T-T_0)-vF(T)$, with $\rho$ pricing duplicated effort~\cite{dasgupta1980} and $v$ the frontier. Pseudocode: draw each firm's type, evaluate the four payoffs, take the logit best response~\cite{mckelvey1995}, aggregate to the market state; seed 206, with parameters and output in Appendix~A.
 
-Fresh run (Appendix~A gives every parameter). Mutual distillation burns $500$ compute units while the frontier falls from $1.000$ to $0.774$: copying a copy only decays~\cite{shumailov2024}. In the budget account, social loss is lowest at a training share of $t^\ast=0.35$ ($+1.35$), against $+2.00$ for all distill and $+1.77$ for all train, so a positive distillation share is efficient and distillation is cheap but never free. Planned: estimate $T_0$, $\rho$, $\delta$.
+Fresh run (Appendix~A). Mutual distillation burns $500$ compute units while the frontier falls from $1.000$ to $0.774$: copying a copy only decays~\cite{shumailov2024}. In the budget account, social loss is lowest at a training share of $t^\ast=0.35$ ($+1.35$), against $+2.00$ for all distill and $+1.77$ for all train, so a positive distillation share is efficient. Planned: estimate $T_0$, $\rho$, $\delta$.
 
 \textbf{GitHub:} \GitHubLink\\
 \textbf{Notebook:} \NotebookLink\\
@@ -58,27 +58,24 @@ Fresh run (Appendix~A gives every parameter). Mutual distillation burns $500$ co
 \textbf{A0 poster:} \PosterLink
 
 \section{Answer to Q3: behavior and interdisciplinary integration}
-Rational benchmark: payoff maximization, with (1) dominant at $k=0$. What each decision pays the firm and does to the market:
+Rational benchmark: payoff maximization, with (1) dominant at $k=0$. 
+Table~\ref{tab:four} gives what each decision pays the firm and does to the market.
 
-What each decision pays is Table~\ref{tab:four}: (1) keeps exclusivity and the source dies; (2) takes a small reward for a copy; (3) pays for capability and locks it; (4) pays most and shares most, best for the market and worst privately.
-
-Behavioral mechanism: firms imitate the cheapest visible profitable action, and distillation is cheap and observable, so imitation pushes the market from (1) toward (2); loss aversion makes the lost exclusivity $L$ weigh more than an equal reward $kE$~\cite{kahneman1979}, so firms under-open. Competing explanation: firms release open weights for reputation, hiring, standards and future market share, so openness is cheaper than a model without the $\beta\phi K$ term assumes~\cite{lerner2002,vonhippel2003,fosfuri2008,habibi2025}. Distinguishing observation: hold total reward spending fixed and switch from lump sum to $E$-indexed --- if imitation dominates, the share of (4) rises slowly; under reputation, the switch changes little. The Hugging Face game runs this switch as peer play; if imitation dominates, we retain the model but qualify common knowledge.
+Behavioral mechanism: firms imitate the cheapest visible profitable action, so imitation pushes the market from (1) toward (2); loss aversion makes the lost exclusivity $L$ weigh more than an equal reward $kE$~\cite{kahneman1979}, so firms under-open. Competing explanation: firms release open weights for reputation and future market share, so openness is cheaper than a model without the $\beta\phi K$ term assumes~\cite{lerner2002,vonhippel2003,fosfuri2008,habibi2025}. Distinguishing observation: hold total reward spending fixed and switch from lump sum to $E$-indexed --- if imitation dominates, the share of (4) rises slowly; under reputation, the switch changes little. The Hugging Face game runs this switch as peer play; if imitation dominates, we retain the model but qualify common knowledge.
 
 \section{Advanced development, real-world impact, and roadmap}
-Foundations: equilibrium reasoning~\cite{nash1950,selten1975,harsanyi1968} (Nobel 1994), mechanism design~\cite{vickrey1961,mirrlees1971,myerson1981,maskin1999} (Nobel 1996, 2007), and knowledge distillation~\cite{hinton2015} (Turing Award 2018). Distinctive now: an open weight is copied at almost no cost while training stays expensive, and no rule separates the two.
+Foundations: equilibrium reasoning~\cite{nash1950,selten1975,harsanyi1968} (Nobel 1994), mechanism design~\cite{vickrey1961,mirrlees1971,myerson1981,maskin1999} (Nobel 1996, 2007), and knowledge distillation~\cite{hinton2015} (Turing Award 2018). Distinctive now: weights are copied at almost no cost while training stays expensive.
 
-Real-world case: an agency paying for open-weight models, such as a national compute subsidy. Stakeholders: labs, small firms, users, taxpayers, the agency. Benefits: more sources, lower prices, wider access. Risks: paying for copies, crowding out training, gaming the reward. What counts is audited training compute, not self-declared openness~\cite{sastry2024}; value is original-source releases per unit of spending; the next discriminating test is the reward switch with real firms.
-
-The foundation-to-2056 roadmap is the cumulative map of Appendix~E.
+Real-world case: an agency paying for open-weight models, such as a national compute subsidy. Stakeholders: labs, small firms, users, taxpayers, the agency. Benefits: more sources, lower prices, wider access. Risks: paying for copies, crowding out training, gaming the reward. What counts is audited training compute, not self-declared openness~\cite{sastry2024}; value is original-source releases per unit of spending; the next discriminating test is the reward switch with real firms; the cumulative map is Appendix~E.
 
 \noindent\textbf{Expected 2056 Nobel Prize and Turing Award contribution statement.}
-By 2056, we aspire to be recognized for a reward standard for how a society pays for machine intelligence, integrating an incentive model, a compute account, and behavioral evidence. Progress will be shown by shifts in original-source releases.
+By 2056, we aspire to a reward standard for how society pays for machine intelligence, shown by shifts in original-source releases.
 
 \subsection*{Open Science Statement}
-GitHub: \path{code/distill_sim.py}, seed 206, log in \path{code/fresh_run_output.txt}; Hugging Face: Prize Rate Game. Both use the same payoffs and states as this paper.
+GitHub: \path{code/distill_sim.py}, seed 206, log in \path{code/fresh_run_output.txt}; Hugging Face: Prize Rate Game. Same payoffs and states as this paper.
 
 \subsection*{Statement of Contribution to the UN's SDGs}
-Intended contribution to SDG 9.5 and SDG 10: a rule that keeps sources alive widens access, measured by original-source releases per unit of spending~\cite{un_sdg}. Paying for copies would raise spending without new capability, so the rule must be evaluated first.
+Intended contribution to SDG 9.5 and SDG 10: a rule that keeps sources alive widens access, measured by original-source releases per unit of spending~\cite{un_sdg}. Paying for copies would raise spending without new capability.
 
 \subsection*{Submission milestones}
-Review-ready September 27, 2026, 11:00 P.M.; symposium September 28, 2:45--5:15 P.M., IB 2050; final revision September 30, 11:00 P.M. Beijing time.
+Review-ready September 27, 2026; symposium September 28, 2:45--5:15 P.M., IB 2050; final revision October 6, 2026.
