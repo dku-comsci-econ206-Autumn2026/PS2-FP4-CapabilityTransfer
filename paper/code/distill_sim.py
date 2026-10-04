@@ -166,6 +166,58 @@ def mutual_distillation(start: float = 1.0) -> tuple[list[float], float]:
     return path, LOOP_FIRMS * LOOP_ROUNDS * C_D
 
 
+def state3_threshold(ecosystem: float = ECOSYSTEM) -> float:
+    """Smallest k at which an E-indexed reward makes original sources modal."""
+    rng = np.random.default_rng(SEED)
+    a, m = firm_types(rng)
+    lo, hi = 0.0, 50.0
+    for _ in range(60):
+        mid = (lo + hi) / 2
+        if market_state(decision_shares(a, m, "indexed", mid, ecosystem)) == 3:
+            hi = mid
+        else:
+            lo = mid
+    return hi
+
+
+# ---------------------------------------------------------- auction account
+def auction_account(rule: str, k: float, ecosystem: float = ECOSYSTEM) -> dict:
+    """Auction reading of one reward rule, in expected values over the firm draws.
+
+    The bid is the training compute E of a release: a distilled release bids E_d,
+    an original release bids E_n, and a closed firm does not bid. Under the all-pay
+    reading every bidder pays its own bid, because the training cost is sunk whether
+    or not the release wins. Allocation in our rule is proportional (each release is
+    paid kE), not winner-take-all; the winner-take-all reading is reported separately.
+    """
+    rng = np.random.default_rng(SEED)
+    a, m = firm_types(rng)
+    c_d, c_n, pi = a * C_D0, a * C_N0, m * PI_0
+    future = future_share_payoff(m, ecosystem)
+    r_small, r_large = rewards(rule, k)
+    u = np.stack([-c_d + pi, -c_d + r_small - L + future,
+                  -c_n + pi, -c_n + r_large - L + future], axis=1)
+    z = u * LAMBDA
+    z -= z.max(axis=1, keepdims=True)
+    p = np.exp(z)
+    p /= p.sum(axis=1, keepdims=True)
+    p2, p4 = p[:, 1], p[:, 3]
+    sources = float(p4.sum())
+    opens = float(p2.sum() + p4.sum())
+    prize = float((p2 * r_small + p4 * r_large).sum())
+    bid = float((p2 * E_D + p4 * E_N).sum())
+    return {
+        "opens": opens,
+        "sources": sources,
+        "source_share": sources / opens if opens else float("nan"),
+        "prize": prize,
+        "bid_compute": bid,
+        "spend_per_source": prize / sources if sources else float("nan"),
+        "rent_over_prize": bid / prize if prize else float("nan"),
+        "utility": float((p * u).mean()),
+    }
+
+
 # --------------------------------------------------------------------- main
 def main() -> None:
     rng = np.random.default_rng(SEED)
@@ -216,8 +268,12 @@ def main() -> None:
         f"{STATE_NAMES[market_state(decision_shares(a, m, 'none', 0.0, 0.0))]}",
         "",
         "Thresholds",
-        "  disclosure needs  k*E_d > L + PI_0*m - beta*phi*K*m/(m+m0)   (with the motive off: k > L/E_d)",
-        f"    at m = 1: k > {(L + PI_0 - ECOSYSTEM / (1 + M0)) / E_D:.2f},  without the motive: k > {L / E_D:.2f}",
+        "  disclosure needs  k*E_d > L + PI_0*m - beta*phi*K*m/(m+m0)",
+        f"    at m = 1, motive on:   k > {(L + PI_0 - ECOSYSTEM / (1 + M0)) / E_D:.2f}",
+        f"    at m = 1, motive off:  k > (L + PI_0)/E_d = {(L + PI_0) / E_D:.2f}"
+        f"   (the familiar k > L/E_d = {L / E_D:.2f} holds only if pi = 0)",
+        f"  sources are modal from  k = {state3_threshold(0.0):.2f} (motive off)"
+        f"  and  k = {state3_threshold(ECOSYSTEM):.2f} (motive on)",
         f"  innovation needs  k > (C_n - C_d)/(E_n - E_d) = {(C_N0 - C_D0) / (E_N - E_D):.4f}",
         f"  sources stay modal under indexed k = 4 with the motive on: share(4) = {shares_idx[3]:.2f}",
         f"  capping pays small-E and large-E releases alike, share(4) = {shares_cap[3]:.2f}",
@@ -240,6 +296,25 @@ def main() -> None:
         "  A positive distillation share is efficient: it stops every firm from paying",
         "  to re-derive the same result. Distillation is cheap, but never free, so the",
         "  reward metric must be E.",
+        "",
+        "Auction account (expected over the 20000 firms; the bid is training compute, not money)",
+        f"  {'reward rule':22}{'opens':>7}{'sources':>9}{'source share':>14}"
+        f"{'prize spend':>13}{'spend/source':>14}{'utility':>10}{'compute/source':>16}",
+    ]
+    for label, rule, k in runs:
+        acc = auction_account(rule, k)
+        per_source = acc['bid_compute'] / acc['sources'] if acc['sources'] else float('nan')
+        lines.append(
+            f"  {label:22}{acc['opens']:>7.0f}{acc['sources']:>9.0f}{acc['source_share']:>14.2f}"
+            f"{acc['prize']:>13.0f}{acc['spend_per_source']:>14.2f}"
+            f"{acc['utility']:>10.2f}{per_source:>16.2f}")
+    lines += [
+        "  read as an all-pay auction: every bidder pays its own bid, so compute/source is the",
+        "  rent a rule dissipates per original release, prize spend is public spending, and",
+        "  source share is the share of releases that are original. Winner-take-all would hand",
+        "  the prize to the highest verified E, always an original release whenever any firm",
+        "  trains; our rule pays proportionally instead, so what separates the rules is the",
+        "  index, not the level or the allocation form.",
     ]
 
     text = "\n".join(lines) + "\n"

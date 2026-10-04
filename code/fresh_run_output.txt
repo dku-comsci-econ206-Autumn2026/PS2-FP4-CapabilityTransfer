@@ -23,8 +23,10 @@ Future market-share motive
   with the motive off, at k = 0 the modal decision is (1) with share 0.96 -> 1 closed
 
 Thresholds
-  disclosure needs  k*E_d > L + PI_0*m - beta*phi*K*m/(m+m0)   (with the motive off: k > L/E_d)
-    at m = 1: k > -2.60,  without the motive: k > 2.56
+  disclosure needs  k*E_d > L + PI_0*m - beta*phi*K*m/(m+m0)
+    at m = 1, motive on:   k > -2.60
+    at m = 1, motive off:  k > (L + PI_0)/E_d = 10.92   (the familiar k > L/E_d = 2.56 holds only if pi = 0)
+  sources are modal from  k = 3.45 (motive off)  and  k = 1.19 (motive on)
   innovation needs  k > (C_n - C_d)/(E_n - E_d) = 1.1591
   sources stay modal under indexed k = 4 with the motive on: share(4) = 0.95
   capping pays small-E and large-E releases alike, share(4) = 0.05
@@ -41,3 +43,16 @@ Compute account
   A positive distillation share is efficient: it stops every firm from paying
   to re-derive the same result. Distillation is cheap, but never free, so the
   reward metric must be E.
+
+Auction account (expected over the 20000 firms; the bid is training compute, not money)
+  reward rule             opens  sources  source share  prize spend  spend/source   utility  compute/source
+  none, k = 0             14166      584          0.04            0          0.00      2.47           27.56
+  openness, R = 20        19839      820          0.04       396790        483.99      7.20           27.49
+  indexed, k = 4          19484    19061          0.98       354763         18.61      5.63            4.65
+  indexed, capped, k = 12  19440      934          0.05       230040        246.30      5.19           24.16
+  read as an all-pay auction: every bidder pays its own bid, so compute/source is the
+  rent a rule dissipates per original release, prize spend is public spending, and
+  source share is the share of releases that are original. Winner-take-all would hand
+  the prize to the highest verified E, always an original release whenever any firm
+  trains; our rule pays proportionally instead, so what separates the rules is the
+  index, not the level or the allocation form.

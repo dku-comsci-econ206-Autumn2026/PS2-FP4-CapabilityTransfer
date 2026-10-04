@@ -3,7 +3,7 @@
 Upload this ZIP to Overleaf and compile `main.tex` with pdfLaTeX.
 
 Authors: Zhengjun He (zhengjun.he@dukekunshan.edu.cn), Yichen Shen (yichen.shen@dukekunshan.edu.cn).
-A third author slot is left blank in `main.tex` as a comment; add `\author{}`, `\affiliation{}`, `\email{}` when known. Symposium session is blank.
+There are two authors. Symposium session: D.
 
 ## Files
 
@@ -13,7 +13,7 @@ A third author slot is left blank in `main.tex` as a comment; add `\author{}`, `
   intellectual development, C open-source record and three lenses, D review response and revision record,
   E structured author notes, F PS2 extension record).
 - `figures/ps2_teaser.tex` — three-panel teaser figure.
-- `references.bib` — 34 verified entries (all DOIs/arXiv IDs resolved live on 2026-10-03).
+- `references.bib` — 35 verified entries (all DOIs/arXiv IDs resolved live on 2026-10-03).
 - `code/distill_sim.py`, `code/fresh_run_output.txt` — simulation and its fresh run (seed 206).
 - `annotated.tex`, `annotations/` — instructor's guidance rail; not the submission driver.
 - `main.pdf` — compiled result at packaging time (7 pages: 2 main + 5 appendix pages).

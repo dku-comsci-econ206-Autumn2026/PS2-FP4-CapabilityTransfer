@@ -1,22 +1,24 @@
 \clearpage\nobalance
 \section*{Author Notes}
 \subsection*{Acknowledgements}
-\textbf{Course instructor: Professor Luyao Zhang.} We thank her for incubating this research from its earliest strategic question, for mentoring the interdisciplinary development of the project, and for her formal review of PS1. We thank Prof.\ Ken Rogerson and Han Zhang (founder of Liberata; Ph.D.\ candidate at Duke University) for their discussions and feedback; \TIAN{此处填 peer reviewers 的全名（分组：张老师课堂反馈、同学评审、Han Zhang）} for their reviews; and our COMSCI/ECON 206 classmates for collaborative learning and questions. We acknowledge the course Overleaf template, Python and NumPy. No external model or compute data was used; every number in this paper comes from \path{code/distill_sim.py}. The authors remain responsible for the proposal and remaining errors.
+\textbf{Course instructor: Professor Luyao Zhang.} We thank Professor Zhang for incubating this research from its earliest strategic question, mentoring the interdisciplinary development of the project, and providing formal feedback on PS1. We are grateful to Han Zhang, a Ph.D.\ candidate at Duke University and founder of Liberata, for his feedback on the future market-share incentive incorporated into the revised model. We also thank Mustafa Ayub Khan, Jiayang Sun, and Temur Akhtamjonov for their thoughtful peer reviews at the symposium, and our COMSCI/ECON 206 classmates for collaborative learning and questions. We acknowledge the course Overleaf template, Python, and NumPy. No external model or compute data was used; every number in this paper comes from \path{code/distill_sim.py}. The authors remain responsible for the proposal and any remaining errors.
 
 \subsection*{Team and individual contributions}
 \textbf{Joint contribution.} The team asked one question: does rewarding openness buy capability, or only copies? Together we built the four-decision model, defined the two reward tools, and fixed the three market states. We specified a compute account in which only original training moves the capability frontier, and designed the peer-play switch between a lump-sum and an $E$-indexed reward. The simulation, the state classification, the poster claim, and Appendix~D use the same payoffs, parameters, and seed, so every number can be rerun from \path{code/distill_sim.py} at seed 206.
 
-\noindent\textbf{Zhengjun He}, author order 1. Contribution: the initial idea that rewarding openness pays copies as well as sources, and the Hugging Face peer-play space. Output: Sections 1 and 4; \HuggingFaceLink.
+\noindent\textbf{Zhengjun He}, author order 1. \emph{Intellectual decision:} to price training compute rather than openness, and to build the market-competition model that puts both reward rules over the same four decisions. \emph{Output:} \path{code/distill_sim.py} with its saved run, and the market-competition framework of Sections 2--3. \emph{Verification:} reran the simulation at seed 206 and checked that both panels, the compute account and the auction account reproduce; \path{verify_k.py} recomputes the four cells from scratch. \emph{Connection:} the numbers in Table 2, Appendix E and the auction record all come from this model. \emph{Next:} repeated rounds with a declining distillable surplus.
 
-\noindent\textbf{Yichen Shen}, author order 2. Contribution: the three connected questions and the GitHub artifact. Output: Sections 1--3, \path{code/distill_sim.py}; \GitHubLink.
+\noindent\textbf{Yichen Shen}, author order 2. \emph{Intellectual decision:} to split the project into the three connected questions --- incentives, computation, behavior --- and to test the behavioral branch as peer play. \emph{Output:} Sections 1 and 4 and the Hugging Face Space, \HuggingFaceLink. \emph{Verification:} ran the Space's reward switch against the paper's payoffs and states and confirmed that each choice maps to its payoff. \emph{Connection:} that switch is the distinguishing observation of Section 4 --- if imitation dominates, the model is kept and common knowledge is qualified. \emph{Next:} log real play in the Space and add repeated rounds.
 
 \bibliographystyle{ACM-Reference-Format}\bibliography{references}
 \appendix
 \section{Technical details and reproducibility}
-Four payoffs per firm: (1) $-C_d+\pi$, (2) $-C_d+kE_d-L$, (3) $-C_n+\pi$, (4) $-C_n+kE_n-L$. Firm types: a simulated population of $N=20000$ firms (no firm-level data enters; the population only aggregates individual choices), cost multiplier $a$ and market power $m$ drawn independently lognormal with $\sigma_a=\sigma_m=0.6$, seed 206, NumPy 2.4.6. Choices use a logit best response with $\lambda=1$~\cite{mckelvey1995}. Level constants, calibrated so that the run reproduces column (a) of Table~\ref{tab:design} (residual $7.4\times10^{-5}$): $C_d=1.4446$, $C_n=5.6704$, $\pi=8.2391$, $L=2.5193$, $E_d=0.9854$, $E_n=4.6311$. Future-share motive: $\beta=0.90$, $\phi=0.50$, $K=44.4$, $m_0=0.50$, giving $\beta\phi K=19.98$~\cite{habibi2025}. Reward designs: (A) lump sum $R$ for any open release; (B) reward $kE$; (C) reward $\min(kE,12)$. Compute account: $F(T)=1-e^{-T/T_0}$, mutual-distillation loop with $\delta=0.95$, $c_d=1$, 100 firms, 5 rounds, and social loss $c_eB+\rho\max(0,T-T_0)-vF(T)$ with $B=100$, $T_0=25$, $\rho=0.01$, $v=1$, $c_e=0.02$. Outputs: \path{code/fresh_run_output.txt}. Shortest reproducible run: \texttt{python code/distill\_sim.py} (in this package). The repository holds \path{k_formula.ipynb}, which derives the two thresholds on $k$ with sympy, and \path{verify_k.py}, which recomputes the four cells from scratch and finds where the best cell changes. Results are deterministic. Known limits: the frontier, duplication price, and $\delta$ are illustrative, not estimated; firms are symmetric except for $a$ and $m$; no entry or exit; no data on real training compute. Repository status: \GitHubLink, release commit \ReleaseCommit.
+Four payoffs per firm, each open cell adding the future term $F(m)=\beta\phi K\,m/(m+m_0)$: (1) $-C_d+\pi$, (2) $-C_d+kE_d-L+F(m)$, (3) $-C_n+\pi$, (4) $-C_n+kE_n-L+F(m)$. Firm types: a simulated population of $N=20000$ firms (no firm-level data enters; the population only aggregates individual choices), cost multiplier $a$ and market power $m$ drawn independently lognormal with $\sigma_a=\sigma_m=0.6$, seed 206, NumPy 2.4.6. Choices use a logit best response with $\lambda=1$~\cite{mckelvey1995}. Level constants, calibrated so that the run reproduces column (a) of Table~\ref{tab:design} (residual $7.4\times10^{-5}$): $C_d=1.4446$, $C_n=5.6704$, $\pi=8.2391$, $L=2.5193$, $E_d=0.9854$, $E_n=4.6311$. Future-share motive: $\beta=0.90$, $\phi=0.50$, $K=44.4$, $m_0=0.50$, giving $\beta\phi K=19.98$~\cite{habibi2025}. Reward designs: (A) lump sum $R$ for any open release; (B) reward $kE$; (C) reward $\min(kE,12)$. Compute account: $F(T)=1-e^{-T/T_0}$, mutual-distillation loop with $\delta=0.95$, $c_d=1$, 100 firms, 5 rounds, and social loss $c_eB+\rho\max(0,T-T_0)-vF(T)$ with $B=100$, $T_0=25$, $\rho=0.01$, $v=1$, $c_e=0.02$. Outputs: \path{code/fresh_run_output.txt}. Shortest reproducible run: \texttt{python code/distill\_sim.py} (in this package). The repository holds \path{k_formula.ipynb}, which derives the two thresholds on $k$ with sympy, and \path{verify_k.py}, which recomputes the four cells from scratch and finds where the best cell changes. Results are deterministic. Known limits: the frontier, duplication price, and $\delta$ are illustrative, not estimated; firms are symmetric except for $a$ and $m$; no entry or exit; no data on real training compute. Repository status: \GitHubLink, release commit \ReleaseCommit.
 
 \subsection{AI-use disclosure}
 Generative AI (DeepSeek) was used only for typesetting, for debugging \texttt{distill\_sim.py}, and for locating references. The ideas, the model, and every test and number come from the authors, who reran the code at seed 206 and checked each value against Table~\ref{tab:design}.
+
+ChatGPT using GPT-5.6 assisted with the development of the Hugging Face Space and the rendering of its web interface. The authors reviewed, tested, and revised the generated code and remain responsible for the final interface and its behavior.
 
 \section{Cumulative Intellectual Development}
 We started from one observation: a firm can imitate an existing model cheaply or innovate at full cost, and can then keep the result secret or disclose it. A public prize rewards disclosure, so it pays the imitator and the innovator the same amount even though only the innovator paid for the capability. Writing the two choices as a $2\times2$ table made the conflict visible: the privately best cell (imitate, secrecy) is the socially worst, and the socially best cell (innovate, disclose) is the privately worst. The next question was what the prize should be paid for. Paid per unit of training budget $E$, it separates the two open cells, so the innovator collects the largest prize and the imitator the smallest; paid flat, the two cells are identical and nobody has a reason to innovate. The last question was whether every firm should innovate. A compute account shows that mutual imitation spends compute without adding capability, while everyone training duplicates the same work, so a mixture is efficient. The GitHub notebook derives the range of the prize rate that keeps the market healthy, and the Hugging Face game tests the first two steps with human players.
@@ -38,7 +40,7 @@ Sources and tools: the course Overleaf PS2 template (acmart class, ACM license t
 
 \subsection{Evidence from practice, as of 2026-10-03}
 We compiled an eight-family evidence table (OpenAI, Anthropic, Google DeepMind, Meta, DeepSeek,
-Alibaba, Mistral AI, xAI; released as \path{EVIDENCE_TABLE.md} with the repository) recording, for
+Alibaba, Mistral AI, xAI; released as \path{EVIDENCE_TABLE.md} with the repository, each row carrying its dated source) recording, for
 each family, whether weights are downloadable, under which licence, whether training compute is
 disclosed, and whether distillation from another developer's model is documented. Three findings
 matter for this paper. First, openness is a licence spectrum rather than a binary, and most families
@@ -63,19 +65,34 @@ or \textbf{Investigate}. Review-ready v1: September 27, 2026. Reviews and discus
 September 28, 2026 symposium, IB 2050. Final v2: October 6, 2026.
 
 \subsection{Instructor, immediate feedback in class}
-\TIAN{整栏留空：此处填张老师课堂即时反馈。每条给出：意见原文、我们的决定（Keep / Revise / Investigate）与理由、
-改了什么、证据位置（PDF 页码 + 章节）、遗留问题（标 planned）。}
+\noindent\textbf{Decision: Revise.} From Professor Luyao Zhang's feedback on PS1, we learned that each member should fork the course-organization GitHub repository, make attributable commits in the personal fork, and submit a pull request back to the shared repository. We had not understood this workflow at the start of the project. We adopted the feedback by creating personal forks for both members and using the fork-and-pull-request workflow for the project, so individual contributions can be traced through each member's commits and pull requests.
 
 \subsection{Peer reviews received at the symposium}
-\TIAN{整栏留空：此处填同学评审。每位 reviewer 一块，写全名、意见原文、我们的决定与理由、改了什么、证据位置、
-遗留问题。}
+\noindent\textbf{Mustafa Ayub Khan --- Keep / Revise / Investigate.}
+\emph{Feedback.} He found the poster coherent, but recommended making the game more coherent and noted that the current evidence does not show how fast the market settles.
+\emph{Decision and response.} We keep the poster's integrated claim, revise the Hugging Face explanation so that each choice is tied more directly to its payoff and market state, and investigate the timing question because the present model intentionally uses one simultaneous move.
+\emph{Evidence.} PDF p.~2, Section~4 (peer-play design), and PDF p.~1, Section~2 (one-shot timing and market states).
+\emph{Planned.} Add repeated rounds and a convergence-time measure before making any claim about how quickly the market settles.
+
+\noindent\textbf{Jiayang Sun --- Keep / Investigate.}
+\emph{Feedback.} The review found the private-versus-social ranking clear and noted that the threshold on $k$ connects the model directly to the proposed reward rule. It also questioned whether the auction interpretation is fully consistent when training compute $E$ is treated as verified rather than strategically reported: who are the strategic opponents, and what is the relevant Nash equilibrium?
+\emph{Decision and response.} We keep the ranking and threshold result, but investigate the auction interpretation. Section~3 now identifies firms as bidders, reported training compute as the bid, audit as the verification step, and the highest verified $E$ (or a proportional split) as the allocation rule.
+\emph{Evidence.} PDF p.~1, Section~2 (rankings and thresholds), and PDF p.~2, Section~3 (all-pay comparison and audit boundary).
+\emph{Planned.} Add noisy or manipulable reporting of $E$ to the simulation and test whether the proposed rule remains incentive-compatible.
+
+\noindent\textbf{Temur Akhtamjonov --- Keep / Revise.}
+\emph{Feedback.} He found that the poster diagram made the results easy to understand, but recommended making the game more interactive and providing more explanation inside the interface.
+\emph{Decision and response.} We keep the poster's visual structure and accept the interface recommendation.
+\emph{Evidence.} A0 poster, Figure~1 and the three-state table; PDF p.~2, Section~4 (current peer-play design).
+\emph{Planned.} Revise the Hugging Face Space with clearer payoff explanations, more visible state changes, and more interactive controls, then adjust the poster so that both artifacts use the same explanation and evidence status.
 
 \subsection{Discussion with Han Zhang (Liberata; Duke Ph.D.\ candidate)}
-\TIAN{整栏留空：此处填 Han Zhang 的反馈。每条给出意见原文（例如关于市场份额的那一条）、我们的决定与理由、
-改了什么（模型新增 $\beta\phi K$ 未来市场份额项）、证据位置、遗留问题。}
-
-\subsection{Reviews we submitted (individual work, two per student)}
-\TIAN{整栏留空：此处填我们各自提交的两份评审记录（评了谁、要点、后续跟进）。}
+\noindent\textbf{Decision: Revise.}
+\emph{Feedback (paraphrased).} Why would large-language-model firms continue distilling one another, and would distillation continue after repeated copying no longer produces an additional private benefit?
+\emph{Reason.} The question exposed a missing intertemporal incentive in the original static payoff table: a firm may release or reuse a model not because another round creates new capability, but because participation can preserve reputation, ecosystem adoption, and future market share.
+\emph{Change made.} We added $\beta\phi K$ to both open actions, representing the discounted future market-share value generated by external contributions. We also added a second simulation panel showing that this motive can move firms from closed distillation to open distillation even at $k=0$. This answers the private-incentive question without claiming that recursive distillation creates new capability.
+\emph{Evidence.} PDF p.~1, Section~2, Table~1 and Table~2; PDF p.~2, Section~4 (future market share as the competing behavioral explanation).
+\emph{Planned.} Extend the model to repeated rounds in which both the remaining distillable surplus and $\beta\phi K$ can decline, then identify the stopping condition at which further distillation is no longer privately worthwhile.
 
 \clearpage\onecolumn
 \section{Structured abstract and cumulative proposal map}\label{app:abstract}
@@ -92,11 +109,11 @@ The eight-row cumulative map uses the same question, assumptions, and evidence s
 Background & Firms choose between cheap distillation ($C_d$) and expensive original training ($C_n$), and between closed exclusivity ($\pi$) and open release (reward $kE$ minus lost exclusivity $L$). Current rules reward openness only. \\
 Motivation and application & Cheap copying and expensive training coexist, so a rule that pays for copies can empty the market of sources. Case: an agency that pays for open-weight models; affected: labs, small firms, users, taxpayers, the agency. \\
 Three connected questions & Q1 which reward rule aligns the private and social rankings; Q2 whether distillation creates capability; Q3 what each decision pays a firm and how firms learn. Integrated question: can an $E$-indexed reward hold state 3, and at what $k$? \\
-Method and model assumptions & $N=20000$ firms, one simultaneous move, common-knowledge parameters, private cost multiplier and market power, logit best response, dominant strategy and Nash equilibrium, compute account $F(T)=1-e^{-T/T_0}$, seed 206. \\
-Results or expected results & Actual: (1) is dominant at $k=0$; openness-only rewards never lift sources above $0.04$; $E$-indexed rewards hold state 3 from $k\ge3$; mutual distillation spends 500 units for no new capability; $t^\ast=0.35$. Planned: estimated $T_0$, $\rho$, $\delta$; a per-firm cap test. Falsifier: an openness-only rule that keeps sources above $0.10$ in a rerun. \\
+Method and model assumptions & $N=20000$ firms, one simultaneous move, common-knowledge parameters, cost multiplier and market power drawn before play and not hidden strategically, logit best response, dominant strategy and Nash equilibrium, compute account $F(T)=1-e^{-T/T_0}$, seed 206. \\
+Results or expected results & Actual: (1) is dominant at $k=0$; openness-only rewards never lift sources above $0.04$; $E$-indexed rewards hold state 3 from $k\approx3.5$ without the motive and $k\approx1.2$ with it; mutual distillation spends 500 units for no new capability; $t^\ast=0.35$. Planned: estimated $T_0$, $\rho$, $\delta$. Falsifier: an openness-only rule that keeps sources above $0.10$ in a rerun. \\
 Intellectual merits & Beyond prior work, the comparison is between two reward rules over the same four decisions, and the reward index (openness versus training compute) is shown to matter more than its level. \\
 Practical impacts & Private value: profit and reward. Public value: sources alive, lower prices, wider access (SDG 9.5, SDG 10, intended only). Risks: paying for copies, crowding out training, gaming. Evidence needed: share of original-source releases per unit of spending. Correction route: published rules and audits. \\
-Feedback received and revision made & The capped-reward run changed the recommendation: with a flat or capped prize the differential disappears and the market returns to state 2, which added the cap warning in Section~2 and the falsifier ``an openness-only rule that keeps sources above $0.10$''. \\
+Feedback received and revision made & The future market-share term $\beta\phi K\,m/(m+m_0)$ was added to both open cells after the Han Zhang discussion, which moves the no-reward market from state 1 to state 2. The capped-reward run changed the recommendation: with a flat or capped prize the differential disappears and the market returns to state 2, which added the cap warning in Section~2 and the falsifier ``an openness-only rule that keeps sources above $0.10$''. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -105,16 +122,16 @@ Feedback received and revision made & The capped-reward run changed the recommen
 \clearpage\twocolumn
 \section{PS2 extension record: mechanism, linked artifacts, poster, and symposium}
 \subsection{Auction laboratory record}
-The reward rule is an all-pay auction~\cite{baye1996}. Scarce resource: the annual public reward budget. Participants: firms that release models. Bid: the verified training compute $E$ of the release. Payment rule: every firm pays its bid, because the training cost is sunk whether or not it wins. Allocation rule: the highest verified $E$ takes the prize; if the budget is shared, each firm receives a share proportional to $E/E_{\max}$. Stopping rule: the budget is exhausted. Predicted equilibrium: over-dissipation, so bids rise above the socially optimal training level until the cap binds --- the capped row of Table~\ref{tab:design}. Treatments and the values to be recorded after the September 28 play:
+The reward rule is an all-pay auction~\cite{baye1996}. Scarce resource: the annual public reward budget. Participants: firms that release models. Bid: the verified training compute $E$ of the release. Payment rule: every firm pays its bid, because the training cost is sunk whether or not it wins. Allocation rule: the highest verified $E$ takes the prize; if the budget is shared, each firm receives a share proportional to $E/E_{\max}$. Stopping rule: the budget is exhausted. Predicted equilibrium: over-dissipation, so bids rise above the socially optimal training level until the cap binds --- the capped row of Table~\ref{tab:design}. Treatments and the values recorded by the fresh run:
 \par\smallskip
 \begin{tabularx}{\columnwidth}{@{}p{1.5cm}YY@{}}\toprule
 \textbf{Treatment}&\textbf{Predicted equilibrium}&\textbf{Observed, utility, revision}\\\midrule
-Lump sum $R$&(1) or (2); no sources; state 2&[record share, payoff, revision]\\
-Indexed $kE$&(4) modal above $k=3$; state 3&[record share, payoff, revision]\\
-Indexed, capped&Back to state 2 at large $k$&[record share, payoff, revision]\\\bottomrule
+Lump sum $R$&(1) or (2); no sources; state 2&Run, seed 206: $.11/.85/.00/.04$ and $.01/.95/.00/.04$, both state 2; $0.04$ of the prize reaches original sources, $484$ per source; mean payoff $7.20$; revision: dropped.\\
+Indexed $kE$&(4) modal from $k\approx3.5$ without the motive, $k\approx1.2$ with it&Run, seed 206 at $k=4$: $.35/.00/.01/.64$ and $.03/.02/.00/.95$, both state 3; $0.98$ of the prize reaches original sources, $18.6$ per source; mean payoff $5.63$; revision: adopted.\\
+Indexed, capped&Back to state 2 at large $k$&Run, seed 206 at $k=12$: $.42/.54/.02/.03$ and $.03/.93/.00/.05$, both state 2; $0.05$ of the prize reaches original sources; mean payoff $5.19$; revision: cap warning kept.\\\bottomrule
 \end{tabularx}
 \par\smallskip
-\noindent Allocation efficiency is measured as the share of firms choosing (4); revenue is the public spending per unit of new capability.
+\noindent Allocation efficiency is the share of the prize reaching original sources ($0.04$ under the lump sum, $0.98$ under the indexed rule); revenue is public spending per original release ($484$ against $18.6$). Every value is the fresh run at seed 206.
 
 \subsection{Linked-artifact parity}
 \begin{tabularx}{\columnwidth}{@{}p{1.75cm}Y@{}}\toprule
@@ -125,4 +142,8 @@ A0 poster&Same question, same state-3 claim, same subsidy case, same limitations
 \end{tabularx}
 
 \subsection{Symposium and practical-impact record}
-[September 28, 2026 symposium: presentation version, questions received, and the team's decisions. For the subsidy case: stakeholders, proposed benefit, risk, missing evidence, correction route. Then record the changes made for the September 30 final revision and rerun the affected check.]
+At the September 28, 2026 symposium, the team presented the A0 poster and linked artifacts. The presentation version and three received peer-evaluation forms are retained in the project records; both authors submitted their assigned reviews through Ed Discussion. The questions concerned continued distillation, audited compute in the auction, market-settling speed, and game clarity. Appendix~D records the team's \textbf{Keep}, \textbf{Revise}, and \textbf{Investigate} decisions.
+
+For the final revision, we adopted personal forks and pull requests, added the future market-share term $\beta\phi K$ and its simulation panel, and clarified the bidders, bids, audit, and allocation rule. We reran \path{code/distill_sim.py} at seed 206 and checked Table~\ref{tab:design}; output is preserved in \path{code/fresh_run_output.txt}. Repeated rounds, manipulable reports of $E$, and Hugging Face and poster updates remain planned.
+
+For a public agency subsidizing open-weight models, stakeholders are developers, smaller firms, users, taxpayers, and the agency. The proposed benefit is more original-source releases, lower prices, and wider access; risks are copied-model payments, crowded-out training, and inflated compute reports. Missing evidence is real firm behavior and reliable compute audits. The correction route is published rules, verifiable training records, monitoring original-source releases per unit of spending, and revising or suspending the rule if evidence fails the state-3 criterion.
