@@ -3,7 +3,6 @@
 COMSCI/ECON 206 · Autumn 2026 · Instructor Luyao Zhang · **Zhengjun He, Yichen Shen**
 
 Paper: *Pay for Training, Not for Openness: Reward Design for Original and Distilled AI Models.*
-<img width="2248" height="1602" alt="image" src="https://github.com/user-attachments/assets/f796ad5a-c2c7-4a12-a2f6-e22b1893636e" />
 
 A firm **distils** or **trains**, then keeps the model **closed** for monopoly profit `pi` or **opens**
 it for a reward `kE` while losing exclusivity `L`. An open release also buys a share of the next
