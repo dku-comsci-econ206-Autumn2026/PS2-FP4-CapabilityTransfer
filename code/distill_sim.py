@@ -218,6 +218,27 @@ def auction_account(rule: str, k: float, ecosystem: float = ECOSYSTEM) -> dict:
     }
 
 
+def payment_table(k: float = 4.0) -> list[str]:
+    """The single implemented payment institution: a proportional kE subsidy.
+
+    Shows two representative firms (cost multiplier a = 1) and total public
+    spending, separating (i) the firm's own training cost, (ii) the subsidy the
+    firm receives, and (iii) the government's total outlay over all open firms.
+    """
+    acc = auction_account("indexed", k)
+    return [
+        "",
+        "Payment institution (implemented): proportional kE subsidy, k = %.1f" % k,
+        "  Imitator (open, distill): own training cost C_d = %.4f, reward k*E_d = %.4f, net %+.4f"
+        % (C_D0, k * E_D, k * E_D - C_D0),
+        "  Innovator (open, train):  own training cost C_n = %.4f, reward k*E_n = %.4f, net %+.4f"
+        % (C_N0, k * E_N, k * E_N - C_N0),
+        "  Total public spending (all open firms, motive on): %.0f (~%.2f per original source)"
+        % (acc["prize"], acc["spend_per_source"]),
+        "  The flat reward and the capped reward are counterfactual designs, not this institution.",
+    ]
+
+
 # --------------------------------------------------------------------- main
 def main() -> None:
     rng = np.random.default_rng(SEED)
@@ -316,6 +337,8 @@ def main() -> None:
         "  trains; our rule pays proportionally instead, so what separates the rules is the",
         "  index, not the level or the allocation form.",
     ]
+
+    lines += payment_table(4.0)
 
     text = "\n".join(lines) + "\n"
     out = pathlib.Path(__file__).resolve().parent / "fresh_run_output.txt"

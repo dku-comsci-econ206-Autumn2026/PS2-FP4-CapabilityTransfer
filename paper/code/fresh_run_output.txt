@@ -56,3 +56,9 @@ Auction account (expected over the 20000 firms; the bid is training compute, not
   the prize to the highest verified E, always an original release whenever any firm
   trains; our rule pays proportionally instead, so what separates the rules is the
   index, not the level or the allocation form.
+
+Payment institution (implemented): proportional kE subsidy, k = 4.0
+  Imitator (open, distill): own training cost C_d = 1.4446, reward k*E_d = 3.9416, net +2.4970
+  Innovator (open, train):  own training cost C_n = 5.6704, reward k*E_n = 18.5244, net +12.8540
+  Total public spending (all open firms, motive on): 354763 (~18.61 per original source)
+  The flat reward and the capped reward are counterfactual designs, not this institution.
