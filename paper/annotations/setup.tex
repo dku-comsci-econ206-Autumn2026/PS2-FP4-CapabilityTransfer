@@ -23,12 +23,12 @@
     at (#3,#4) {#1};}
 \newcommand{\AnnPageTitle}{%
   \ifcase\value{page}\or
-    Keep the PS1 structure\or
+    Eight required parts\or
     Integrate evidence and impact\or
-    Preserve the appendix sequence\or
-    Update the same cumulative map\or
+    Authorship and reproducibility\or
+    Final week and release audit\or
     Add only the PS2 extension record\else
-    Continue the documented draft\fi}
+    Final release and evidence\fi}
 \newcommand{\AnnPageNotes}{%
   \ifcase\value{page}\or\input{annotations/page1}\or
     \input{annotations/page2}\or\input{annotations/page3}\or
@@ -61,7 +61,7 @@
 \AddToHook{shipout/before}{\global\pdfpagewidth=912bp\relax}
 \AddToShipoutPictureBG{\AtPageUpperLeft{%
   \begin{tikzpicture}[overlay,x=1bp,y=-1bp]
-    \fill[AnnRail] (612,0) rectangle (912,792);
+    \fill[AnnRail] (612,0) rectangle (912,842);
     \draw[AnnLine,line width=.6bp] (612,0)--(612,792);
   \end{tikzpicture}}}
 \AddToShipoutPictureFG{\AtPageUpperLeft{%
@@ -70,16 +70,16 @@
     \AnnPagePins
     \node[anchor=north west,inner sep=0,text width=266bp] at (629,26) {%
       \sffamily\color{AnnInk}\fontsize{10}{12}\selectfont\raggedright
-      \textbf{PS2 / ANNOTATED WORKING COPY}\par\vspace{5pt}
+      {\fontsize{9}{11}\selectfont\bfseries FINAL PROJECT ANNOTATED COPY}\par\vspace{5pt}
       {\fontsize{15}{17}\selectfont\bfseries\AnnPageTitle}\par\vspace{7pt}
       {\fontsize{9}{11}\selectfont
       \textcolor{AnnReplace}{\textbf{R REPLACE}}\quad
       \textcolor{AnnConnect}{\textbf{C CONNECT}}\quad
       \textcolor{AnnDevelop}{\textbf{D DEVELOP}}}};
     \node[anchor=north west,inner sep=0] at (629,102) {\usebox{\AnnRailBox}};
-    \node[anchor=north west,inner sep=0,text width=266bp] at (629,748) {%
+    \node[anchor=north west,inner sep=0,text width=266bp] at (629,798) {%
       \sffamily\fontsize{8.4}{10.2}\selectfont\color{AnnInk}
       Guidance is scaffolding. Submit from \texttt{main.tex}.
-      \textbf{\thepage/5}};
+      \textbf{\thepage/4}};
   \end{tikzpicture}}}
 \fi
