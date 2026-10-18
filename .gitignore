@@ -17,3 +17,11 @@ desktop.ini
 
 # Local response records exported from the decision interface
 *.local.json
+
+# LaTeX build intermediates
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+

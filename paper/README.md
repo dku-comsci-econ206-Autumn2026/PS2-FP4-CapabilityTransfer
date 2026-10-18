@@ -13,11 +13,11 @@ Authors: Zhengjun He (zhengjun.he@dukekunshan.edu.cn), Yichen Shen (yichen.shen@
 - `references.bib` — full references with DOI or direct URL.
 - `code/distill_sim.py`, `code/fresh_run_output.txt` — simulation and its fresh run (seed 206).
 
-## To finish before submission (grep for `TODO` and `[FINAL-COMMIT]`)
+## Release status
 
-1. Record the Rogerson email in Appendix G (sent date + the specific contribution thanked + the one question asked).
-2. Replace `[FINAL-COMMIT]` with the real commit hash after the final push (main.tex and Appendix G).
-3. Commit `poster/final-poster.png` and `poster/final-poster.pdf`, and add the embed + PDF link to the repository **root** README.
+- Rogerson email recorded in Appendix G (sent October 18, 2026).
+- Tested commit `a38a684` recorded in `main.tex` and Appendix G.
+- `poster/final-poster.png` and `poster/final-poster.pdf` committed; embedded in the root README.
 
 ## Verify locally
 

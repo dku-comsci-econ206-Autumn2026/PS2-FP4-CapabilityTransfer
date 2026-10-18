@@ -107,22 +107,18 @@ Full list with DOIs: `paper/references.bib`.
 Course-organization repository:
 <https://github.com/dku-comsci-econ206-Autumn2026/PS2-FP4-CapabilityTransfer>
 
-Tested commit: **`8be3f02`** (release merge in the course organization, 2026-10-04). It carries the tested
-revision `4c3b928`; both trees are `cb1e48d5628c`, so `git checkout 8be3f02` and `git checkout 4c3b928`
-give byte-identical working copies. The paper, this README and `k_formula.ipynb` cite the same commit.
-What was run at that commit, from a clean clone:
+Tested commit: **`a38a684`** (final project release, 2026-10-18). The paper, this README, and
+`k_formula.ipynb` cite this commit. What was run at that commit, from a clean clone:
 
 ```
 pip install -r requirements.txt
-python code/distill_sim.py      # reproduces code/fresh_run_output.txt byte for byte
+python code/distill_sim.py      # reproduces code/fresh_run_output.txt, including the payment table
 python verify_k.py              # "all five claims hold"
 node hf_space/test.js           # "all tests passed"
 ```
 
-The paper's Table 2 two-panel numbers are the output of the first command; `outputs/fresh_run_output.txt`
-is the same file as `code/fresh_run_output.txt`. Nothing in `code/`, `verify_k.py`, `hf_space/`, the
-notebook logic or the result files has changed since `8be3f02`, so the tested release stays reproducible at
-that commit; all later edits are documentation and the paper copy.
+The paper's Table 2 two-panel numbers and the two-firm payment table are the output of the first command;
+`outputs/fresh_run_output.txt` is the same file as `code/fresh_run_output.txt`.
 
 ## License
 
